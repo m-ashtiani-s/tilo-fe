@@ -1,0 +1,51 @@
+import { showNotification } from "@/stores/notification.store";
+import { Problem } from "@/types/http-errors.interface";
+import { Notification } from "@/types/notification.interface";
+import {MutationCache, QueryCache, QueryClient} from "@tanstack/react-query"
+
+export const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+        onError: (error) => {
+            console.log('gggg',error)
+            // show notification
+        },
+    }),
+
+    mutationCache: new MutationCache({
+        onError: (error) => {
+            // show notification
+            console.log(error)
+        },
+    }),
+
+    defaultOptions: {
+        queries: {
+            retry: false,
+            refetchOnWindowFocus: false,
+            throwOnError: false,
+            gcTime: 6*60*1000,
+            staleTime:5*60*1000,
+        },
+    },
+});
+
+const showNotifications = (problem: Problem) => {
+    const notifications: Omit<Notification, "id">[] = [];
+    if (problem?.errors) {
+        Object.entries(problem.errors).forEach(([_, values]) =>
+            values.forEach((errorMessage) =>
+                notifications.push({
+                    message: errorMessage,
+                    type: "error",
+                })
+            )
+        );
+    } else if (problem?.detail) {
+        notifications.push({
+            message: problem.detail,
+            type: "error",
+        });
+    }
+
+    showNotification(notifications);
+};

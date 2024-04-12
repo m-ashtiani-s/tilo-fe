@@ -1,0 +1,14 @@
+export { default as IconBasket } from './src/basket';
+export { default as IconCalendar } from './src/calendar';
+export { default as IconCamera } from './src/camera';
+export { default as IconDiscount } from './src/discount';
+export { default as IconEdit } from './src/edit';
+export { default as IconLike } from './src/like';
+export { default as IconLock } from './src/lock';
+export { default as IconMail } from './src/mail';
+export { default as IconMoney } from './src/money';
+export { default as IconPhone } from './src/phone';
+export { default as IconSearch } from './src/search';
+export { default as IconShop } from './src/shop';
+export { default as IconTruck } from './src/truck';
+export { default as IconUser } from './src/user';

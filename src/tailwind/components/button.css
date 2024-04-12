@@ -1,0 +1,58 @@
+.btn {
+    @apply no-underline gap-2 px-10 py-1.5 inline-flex  cursor-pointer select-none leading-7 font-poppins text-sm;
+    @apply items-center justify-center border-transparent text-center transition duration-100 ease-in-out rounded-lg;
+    &:active:hover,
+    &:active:focus {
+        transform: scale(0.97);
+    }
+
+    /* default btn */
+    & {
+        @apply border-primary bg-primary text-primary-content  outline-primary;
+        @media (hover: hover) {
+            &:hover {
+                @apply  shadow-sm;
+            }
+        }
+    }
+   
+
+    
+
+
+    /* outline */
+    &-outline {
+        @apply border border-neutral-7 bg-transparent text-neutral-7 leading-6.5;
+        @media (hover: hover) {
+            &:hover {
+                @apply shadow-sm;
+            }
+        }
+        
+        
+    }
+    /* shape */
+    &-rounded {
+        @apply  rounded-full;
+        @media (hover: hover) {
+            &:hover {
+                @apply shadow-sm;
+            }
+        }
+        
+        
+    }
+
+    /* disabled */
+    &[disabled],
+    &:disabled {
+        @apply pointer-events-none border-opacity-0 bg-neutral-7 bg-opacity-20 text-white text-opacity-20;
+    }
+    @media (hover: hover) {
+        &[disabled]:hover,
+        &:disabled:hover {
+            @apply border-opacity-0 bg-neutral-7 bg-opacity-20 text-white text-opacity-20;
+        }
+    }
+
+}
