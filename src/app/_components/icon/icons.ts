@@ -1,9 +1,12 @@
+export { default as IconArrow } from './src/arrow';
+export { default as IconArrowRight } from './src/arrowRight';
 export { default as IconBasket } from './src/basket';
 export { default as IconCalendar } from './src/calendar';
 export { default as IconCamera } from './src/camera';
 export { default as IconDiscount } from './src/discount';
 export { default as IconEdit } from './src/edit';
 export { default as IconFacebook } from './src/facebook';
+export { default as IconHamburger } from './src/hamburger';
 export { default as IconInstagrm } from './src/instagrm';
 export { default as IconLike } from './src/like';
 export { default as IconLock } from './src/lock';
