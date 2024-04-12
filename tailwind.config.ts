@@ -70,7 +70,8 @@ const config: Config = {
 		extend: {
 			colors: tailwindColors,
 			backgroundImage: {
-				"hero-img": "url('/images/elevator.jpg')",
+				"hero-slide-1": "url('/images/hero.jpg')",
+				"hero-slide-2": "url('/images/slide-2.jpg')",
 			},
 			height:{
 				'200':'800px',
