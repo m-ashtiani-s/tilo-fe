@@ -2,72 +2,59 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { IconFacebook, IconInstagrm, IconYoutube } from "../icon/icons";
 
 export const Footer = () => {
 	return (
 		<div className="">
-			<div className="flex bg-primary py-6 ">
-				<div className="container">
-					<div className="flex justify-between flex-col lg:flex-row items-center gap-4">
-						<div className="text-white text-sm lg:text-base text-center leading-8">برای خدمات مشاوره، طراحی و محاسبات پروژ خود، با ما در ارتباط باشید</div>
-						<div className="text-white flex gap-4 items-center flex-row-reverse">
-							۹۷ ۱۴۰ ۶۶۶ ۰۲۱ – ۳۵۰۷ ۳۳۵ ۰۹۱۲
+			<div className="bg-neutral-7">
+				<footer className="container flex flex-col gap-12 pt-20 pb-14">
+					<div className="flex justify-between items-center">
+						<div className="flex gap-8 items-center">
+							<div className="font-semibold text-2xl text-white">Tilo</div>
+							<div className="w-0.25 h-6 bg-neutral-4"></div>
+							<div className="text-neutral-3">Gift & Decoration Store</div>
+						</div>
+						<div className="flex gap-10 items-center text-neutral-1">
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								Home
+							</Link>
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								Shop
+							</Link>
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								Product
+							</Link>
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								Blog
+							</Link>
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								Contact Us
+							</Link>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div className="bg-primary-focus">
-				<footer className="container flex flex-col  lg:flex-row items-center gap-5 px-0  lg:px-12 xl:px-40 py-20">
-					<div className="text-center flex flex-col items-center lg:me-20">
-						<Image src="/images/logo.png" width={150} height={36} alt="کلاسبن" />
-
-						<p className="opacity-70 mt-2">
-						ارائه دهنده خدمات مشاوره پروژه، طراحی، 
-							<br /> نقشه کشی و محاسبات مهندسی
-						</p>
-					</div>
-					<div className="flex flex-1 flex-col md:flex-row gap-5 md:gap-6 whitespace-nowrap">
-						<div className="grid flex-1 basis-36 gap-3 place-items-center md:place-items-start ">
-							<Link href="/docs/install/" className="link link-hover">
-								برنامه LiftPart
-							</Link>
-							<Link href="/docs/customize/" className="link link-hover">
-								برنامه LiftAxe
-							</Link>
-							<Link href="/docs/customize/" className="link link-hover">
-								برنامه LiftForm
+					<div className="border-t border-neutral-4 pt-4 flex justify-between items-center">
+						<div className="flex gap-7 items-center">
+							<div className="text-neutral-3 font-light">Copyright © 2023 3legant. All rights reserved</div>
+							<Link className="hover:text-secondary-green duration-200 text-neutral-1" href="./">Privacy Policy</Link>
+							<Link className="hover:text-secondary-green duration-200 text-neutral-1" href="./">
+								Terms of Use
 							</Link>
 						</div>
-
-						<div className="grid flex-1 basis-36 gap-3 place-items-center md:place-items-start">
-							<Link href="/docs/themes/" className="link link-hover">
-								آموزش ها
+						<div className="flex gap-10 items-center">
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								<IconInstagrm className="hover:fill-secondary-green duration-200" fill="#FEFEFE" strokeWidth={0} width={32} height={32} />
 							</Link>
-							<Link href="/docs/themes/" className="link link-hover">
-								اخبار و مقالات
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								<IconFacebook className="hover:stroke-secondary-green duration-200" stroke="#FEFEFE" strokeWidth={1.3} width={32} height={32} />
 							</Link>
-							<Link href="/docs/themes/" className="link link-hover">
-								درباره ما
+							<Link className="hover:text-secondary-green duration-200 " href="./">
+								<IconYoutube className="hover:fill-secondary-green duration-200" fill="#FEFEFE" strokeWidth={0} width={32} height={32} />
 							</Link>
-						</div>
-						
-					</div>
-				</footer>
-			</div>
-
-			<div className="bg-primary text-left">
-				<div className="container py-6 flex justify-between items-center flex-col lg:flex-row gap-4">
-					<div className="flex gap-5 items-center ">
-						<div className="flex flex-col">
-							<span className="text-base-content/50 ">طراحی و اجرا: <Link href='https://ayliweb.ir' className=" font-bold tracking-wide text-base-content">گروه آیلی وب</Link></span>
 							
 						</div>
 					</div>
-					<span className="text-sm text-base-content/60 font-semibold">
-						
-						<p>تمامی حقوق محفوظ است Copyright © 2023</p>
-					</span>
-				</div>
+				</footer>
 			</div>
 		</div>
 	);
