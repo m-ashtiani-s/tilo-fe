@@ -47,17 +47,17 @@ export default function Input({ placeholder, className='', name='', onChange=und
 				value={!!value ? value : ''}
 				onFocus={FocusHandler}
 				onBlur={BlureHandler}
-				className={`${className} border border-1 border-gray-300 rounded-md py-3 px-6 duration-200 focus:outline-1 outline-primary/0 focus:outline-primary z-20 text-black/80`}
+				className={`${className} bg-primary/0  border-b  py-3 px-6 duration-200 outline-none focus:border-b-primary z-20 text-black/80`}
 			/>
 			{!!placeholder && <span
 				onClick={handleSpanClick}
-				className={`whitespace-nowrap absolute duration-200 z-10 bg-white px-2  ${focused ? "right-3 -top-2 text-xs " : "right-3 top-3"}`}
+				className={`whitespace-nowrap absolute duration-200 z-10 bg-none px-2  ${focused ? "left-0 -top-2 text-xs " : "left-3 top-3"}`}
 			>
 				{placeholder}
 			</span>}
 			<span
 				onClick={handleClear}
-				className={`whitespace-nowrap absolute duration-200 z-10 bg-white px-2 left-3 top-4 cu  ${focused ? "block" : "hidden"}`}
+				className={`whitespace-nowrap absolute duration-200 z-10  px-2 right-3 top-4 cu  ${focused ? "block" : "hidden"}`}
 			>
 				<IconMultiplication fill="#00000080" stroke="none" />
 			</span>

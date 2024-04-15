@@ -2,10 +2,14 @@ import Image from "next/image";
 import HeroSlider from "./_components/heroSlider/heroSlider";
 import { IconArrowRight } from "./_components/icon/icons";
 import Link from "next/link";
+import { Footer } from "./_components/footer/footer";
+import Header from "./_components/header/header";
 
 export default async function Home() {
 	return (
 		<main className="">
+			<Header />
+
 			<section className="">
 				<div className="relative z-10">
 					<HeroSlider />
@@ -43,13 +47,15 @@ export default async function Home() {
 					<div className="">
 						<div className="flex justify-between items-center">
 							<div className="text-2xl text-neutral-7 font-medium">New Arrivals</div>
-							<Link href='./' className=" text-neutral-7 font-medium flex items-center gap-2">
-								New Arrivals <IconArrowRight fill="#141718" strokeWidth={0} width={14} className="flex items-center" viewBox="0 0 14 9" />
+							<Link href="./" className=" text-neutral-7 font-medium flex items-center gap-2">
+								New Arrivals{" "}
+								<IconArrowRight fill="#141718" strokeWidth={0} width={14} className="flex items-center" viewBox="0 0 14 9" />
 							</Link>
 						</div>
 					</div>
 				</div>
 			</section>
+			<Footer />
 		</main>
 	);
 }
