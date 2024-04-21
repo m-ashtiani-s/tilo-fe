@@ -76,27 +76,27 @@
 	}
 }
 
-.custom-swipper .swiper-button-prev {
+.hero-slider .swiper-button-prev {
 	position: absolute;
 	top: inherit;
 	bottom: 16px !important;
 	left: 16px;
 }
-.custom-swipper .swiper-button-next {
+.hero-slider .swiper-button-next {
 	position: absolute;
 	top: inherit;
 	bottom: 16px !important;
 	left: 88px;
 }
 
-.custom-swipper .swiper-button-prev:after {
+.hero-slider .swiper-button-prev:after {
 	display: none;
 }
-.custom-swipper .swiper-button-next:after {
+.hero-slider .swiper-button-next:after {
 	display: none;
 }
 
-.custom-swipper .swiper-button-prev:before {
+.hero-slider .swiper-button-prev:before {
 	content: "";
 	min-width: 80px;
 	height: 50px;
@@ -109,7 +109,7 @@
 	position: relative;
 	left: 0px;
 }
-.custom-swipper .swiper-button-next:before {
+.hero-slider .swiper-button-next:before {
 	content: "";
 	min-width: 80px;
 	height: 50px;
@@ -122,18 +122,18 @@
 	left: 0px;
 }
 
-.swiper-pagination-bullet-active {
+.hero-slider .swiper-pagination-bullet-active {
 	width: 32px !important;
   background: #f4f4f4 !important;
 }
 
-.custom-swipper span.swiper-pagination-bullet {
+.hero-slider span.swiper-pagination-bullet {
 	width: 8px;
 	height: 8px;
 	border-radius: 8px;
 	transition: 0.5s;
 }
 
-.custom-swipper .swiper-pagination-clickable {
+.hero-slider .swiper-pagination-clickable {
   bottom: 26px !important;
 }

@@ -4,6 +4,7 @@ import { IconArrowRight } from "./_components/icon/icons";
 import Link from "next/link";
 import { Footer } from "./_components/footer/footer";
 import Header from "./_components/header/header";
+import ProductSlider from "./_components/productSlider/productSlider";
 
 export default async function Home() {
 	return (
@@ -42,7 +43,7 @@ export default async function Home() {
 					</div>
 				</div>
 			</section>
-			<section className="py-16">
+			<section className="pt-16">
 				<div className="container relative">
 					<div className="">
 						<div className="flex justify-between items-center">
@@ -53,6 +54,11 @@ export default async function Home() {
 							</Link>
 						</div>
 					</div>
+				</div>
+			</section>
+			<section className="py-16">
+				<div className="container relative">
+					<ProductSlider />
 				</div>
 			</section>
 			<Footer />
