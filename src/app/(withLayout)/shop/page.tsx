@@ -1,11 +1,14 @@
 import ProductCart from "@/app/_components/productCart/productCart";
 import { API_URL } from "@/configs/global";
+import { Page } from "@/types/paginate";
+import { Product } from "@/types/product";
+import { Res } from "@/types/responseType";
 import Link from "next/link";
 
 async function getProducts() {
     const res = await fetch(`${API_URL}/v1/products`, {
         next: {
-            revalidate: 24 * 60 * 60,
+            revalidate: 60 * 60 * 24,
         },
     });
     return res.json();
@@ -13,9 +16,8 @@ async function getProducts() {
 
 export default async function Page() {
     const productsList = getProducts();
-    const [products]: [any] = await Promise.all([productsList]);
+    const [products]: [Res<Page<Product>>] = await Promise.all([productsList]);
 
-    console.log(products.data.data.elements);
     return (
         <>
             <section className="h-140">
@@ -41,7 +43,7 @@ export default async function Page() {
                         <div className="w-3/12"></div>
                         <div className="w-9/12">
                             <div className="flex flex-wrap">
-                                {products.data.data.elements.map((product: any) => (
+                                {products.data?.elements.map((product: any) => (
                                     <div className="w-4/12 p-3">
                                         <ProductCart product={product} />
                                     </div>

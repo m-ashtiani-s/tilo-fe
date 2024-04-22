@@ -1,5 +1,5 @@
 .timer {
-    @apply flex justify-center;
+    @apply flex justify-end;
   
     &-xs {
       @apply gap-3;

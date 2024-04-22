@@ -19,7 +19,7 @@
     "module": "Node16",
     "moduleResolution": "Node16",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
