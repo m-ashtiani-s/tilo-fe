@@ -9,7 +9,22 @@ import "swiper/css/pagination";
 import { Slide, SliderProps } from "./heroSlider.types";
 import { Avatar } from "../avatar";
 import { useEffect, useState } from "react";
-import { slides } from "@/data/slides";
+// import { slides } from "@/data/slides";
+
+const slides = [
+	{
+		title:'',
+		subTitle:'',
+		image:'bg-hero-slide-1'
+
+	},
+	{
+		title:'',
+		subTitle:'',
+		image:'bg-hero-slide-2'
+
+	},
+];
 export default function HeroSlider() {
 	const [width, setWidth] = useState<number>(0); // Initialize width with 0
 
