@@ -45,7 +45,7 @@ async function apiBase<T>(
 
 async function readData<T>(
     url: string,
-    headers?: AxiosRequestHeaders
+    headers?: AxiosRequestConfig["headers"]
 ): Promise<T> {
     const options: AxiosRequestConfig = {
         headers: headers,
@@ -57,11 +57,11 @@ async function readData<T>(
 async function createData<TModel, TResult>(
     url: string,
     data: TModel,
-    headers?: AxiosRequestHeaders
+    headers?: AxiosRequestConfig["headers"]
 ): Promise<TResult> {
     const options: AxiosRequestConfig = {
         method: "POST",
-        headers: headers,
+        headers: headers || {},
         data: JSON.stringify(data),
     };
 

@@ -4,13 +4,44 @@ import Image from "next/image";
 import { Button } from "../button/button";
 import { IconLike } from "../icon/icons";
 import Link from "next/link";
+import { createData, readData } from "@/core/http-service/http-service";
+import { API_URL } from "@/configs/global";
+import { useEffect, useState } from "react";
+import { Res } from "@/types/responseType";
+import { Product } from "@/types/product";
 
 interface Iprops {
     product: any;
+    likedProducts: Product[] | null;
 }
 
-export default function ProductCart({ product }: Iprops) {
-    console.log(product);
+export default function ProductCart({ product, likedProducts }: Iprops) {
+    const [liked, setLiked] = useState<boolean>(false);
+
+    useEffect(() => {
+        likedProducts?.map((liked) => {
+            liked?._id === product._id && setLiked(true);
+        });
+    }, [likedProducts]);
+
+    const likeProductHandler = async () => {
+        try {
+            const res = await createData<any, Res<Product>>(
+                `${API_URL}/v1/like`,
+                {
+                    productId: product?._id,
+                },
+                {
+                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyNzY0NzA0ZTI3MjZlYWE3ZmM5M2U0IiwiZW1haWwiOiJra2VyMUBqZGpkLmNvbSIsImlhdCI6MTcxMzg2NDkyOCwiZXhwIjoxNzEzODkzNzI4fQ.FGMNkPU0wVMwZJTn_46DFV2EmujuDfC0xtdNL3_kx00",
+                }
+            );
+            !!res.success && setLiked(!liked);
+        } catch (error) {
+            console.log("error: ", error);
+        } finally {
+        }
+    };
+
     return (
         <div>
             <div className="flex flex-col ">
@@ -28,8 +59,11 @@ export default function ProductCart({ product }: Iprops) {
                     )}
                     <span className="absolute h-8 w-8 flex items-center justify-center rounded-full shadow-md bg-white top-4 right-4">
                         <IconLike
+                            onClick={likeProductHandler}
                             strokeWidth={3}
-                            className="fill-red-500/0 hover:fill-red-500 duration-200 cursor-pointer stroke-neutral-4 hover:stroke-neutral-4/0"
+                            className={` hover:fill-red-500 duration-200 cursor-pointer  hover:stroke-neutral-4/0 ${
+                                liked ? "fill-red-500 stroke-neutral-4/0" : "fill-red-500/0 stroke-neutral-4"
+                            }`}
                         />
                     </span>
                 </div>

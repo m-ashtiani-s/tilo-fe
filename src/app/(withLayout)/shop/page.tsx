@@ -1,22 +1,52 @@
+'use client'
+
 import ProductCart from "@/app/_components/productCart/productCart";
 import { API_URL } from "@/configs/global";
-import { Page } from "@/types/paginate";
+import { createData, readData } from "@/core/http-service/http-service";
+import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-async function getProducts() {
-    const res = await fetch(`${API_URL}/v1/products`, {
-        next: {
-            revalidate: 60 * 60 * 24,
-        },
-    });
-    return res.json();
-}
+export default function Page() {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [likedProducts, setLikedProducts] = useState<Product[]>([]);
+    const mount = useRef<boolean>(false);
 
-export default async function Page() {
-    const productsList = getProducts();
-    const [products]: [Res<Page<Product>>] = await Promise.all([productsList]);
+    useEffect(() => {
+        mount.current = true;
+    }, []);
+    useEffect(() => {
+        if (!!mount.current) {
+            getProducts();
+            getLikedProducts();
+        }
+    }, [mount]);
+
+    const getProducts = async () => {
+        try {
+            const res = await readData<Res<Paginate<Product>>>(`${API_URL}/v1/products`);
+            !!res.data && setProducts(res.data?.elements);
+        } catch (error) {
+            console.log("error: ", error);
+        } finally {
+        }
+    };
+    const getLikedProducts = async () => {
+        try {
+            const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`, {
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyNzY0NzA0ZTI3MjZlYWE3ZmM5M2U0IiwiZW1haWwiOiJra2VyMUBqZGpkLmNvbSIsImlhdCI6MTcxMzg2NDkyOCwiZXhwIjoxNzEzODkzNzI4fQ.FGMNkPU0wVMwZJTn_46DFV2EmujuDfC0xtdNL3_kx00",
+            });
+
+            !!res.data && setLikedProducts(res.data);
+        } catch (error) {
+            console.log("error: ", error);
+        } finally {
+        }
+    };
+
+    console.log(likedProducts)
 
     return (
         <>
@@ -43,9 +73,9 @@ export default async function Page() {
                         <div className="w-3/12"></div>
                         <div className="w-9/12">
                             <div className="flex flex-wrap">
-                                {products.data?.elements.map((product: any) => (
+                                {products?.map((product: any) => (
                                     <div className="w-4/12 p-3">
-                                        <ProductCart product={product} />
+                                        <ProductCart product={product} likedProducts={likedProducts} />
                                     </div>
                                 ))}
                             </div>

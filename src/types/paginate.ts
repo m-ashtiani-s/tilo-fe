@@ -1,4 +1,4 @@
-export type Page<T> = {
+export type Paginate<T> = {
     page: number;
     totalElements: number;
     totalPages: number;
