@@ -9,7 +9,7 @@ export const Notifications: React.FC<NotificationProps> = () => {
   if (notifications.length < 1) return null;
 
   return (
-    <div className="fixed  flex flex-col-reverse bottom-3 right-3 gap-3">
+    <div className="fixed  flex flex-col-reverse bottom-3 right-3 gap-3 z-[10000]">
       {notifications.map((p) => {
         return (
           <NotificationToast key={`notification-${p.id}`} notification={p} />

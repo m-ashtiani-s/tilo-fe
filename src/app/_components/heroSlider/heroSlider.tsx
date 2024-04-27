@@ -61,7 +61,7 @@ export default function HeroSlider() {
 		>
 			{slides?.map((slide: any, index: number) => (
 				<SwiperSlide key={slide?.image + index}>
-					<div className={`${slide.image} h-140 bg-cover bg-no-repeat bg-center`}></div>
+					<div className={`${slide.image} h-140 bg-cover bg-no-repeat bg-bottom`}></div>
 				</SwiperSlide>
 			))}
 		</Swiper>

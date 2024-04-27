@@ -25,13 +25,15 @@ httpService.interceptors.response.use(
         if (error?.response) {
             const statusCode = error?.response?.status;
             if (statusCode >= 400) {
-                const errorData: ApiError = error.response?.data;
+                // const errorData: ApiError = error.response?.data;
 
-                errorHandler[statusCode](errorData);
+                // errorHandler[statusCode](errorData);
+                error.errorResponse = error.response.data;
             }
         } else {
             networkErrorStrategy();
         }
+        return Promise.reject(error.response.data);
     }
 );
 
@@ -51,7 +53,13 @@ async function readData<T>(
         headers: headers,
         method: "GET",
     };
-    return await apiBase<T>(url, options);
+    try {
+        const response= await apiBase<T>(url, options);
+        return response;
+    } catch (error) {
+        console.log(error)
+        throw  error;
+    }
 }
 
 async function createData<TModel, TResult>(

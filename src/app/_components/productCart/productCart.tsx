@@ -5,7 +5,7 @@ import { Button } from "../button/button";
 import { IconLike } from "../icon/icons";
 import Link from "next/link";
 import { createData, readData } from "@/core/http-service/http-service";
-import { API_URL } from "@/configs/global";
+import { API_URL, TOKEN } from "@/configs/global";
 import { useEffect, useState } from "react";
 import { Res } from "@/types/responseType";
 import { Product } from "@/types/product";
@@ -19,6 +19,7 @@ export default function ProductCart({ product, likedProducts }: Iprops) {
     const [liked, setLiked] = useState<boolean>(false);
 
     useEffect(() => {
+        console.log(likedProducts)
         likedProducts?.map((liked) => {
             liked?._id === product._id && setLiked(true);
         });
@@ -32,7 +33,7 @@ export default function ProductCart({ product, likedProducts }: Iprops) {
                     productId: product?._id,
                 },
                 {
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyODAzMzUwNDhiY2M2MzM2ZWM1ZjY5IiwiZW1haWwiOiJra2VmZnJAamRqZC5jb20iLCJpYXQiOjE3MTM4OTgyOTksImV4cCI6MTcxMzkyNzA5OX0.dLnOV6Uhz9Af-dZYB71xHfka6e4YzLA2CjCV1oF0zt0",
+                    token: TOKEN,
                 }
             );
             !!res.success && setLiked(!liked);

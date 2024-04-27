@@ -36,7 +36,7 @@ export default function Page() {
     const getLikedProducts = async () => {
         try {
             const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`, {
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyODAzMzUwNDhiY2M2MzM2ZWM1ZjY5IiwiZW1haWwiOiJra2VmZnJAamRqZC5jb20iLCJpYXQiOjE3MTM4OTgyOTksImV4cCI6MTcxMzkyNzA5OX0.dLnOV6Uhz9Af-dZYB71xHfka6e4YzLA2CjCV1oF0zt0",
+                token: TOKEN,
             });
 
             !!res.data && setLikedProducts(res.data);

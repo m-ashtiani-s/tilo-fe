@@ -3,7 +3,7 @@
 import { Button } from "@/app/_components/button/button";
 import { IconArrow, IconLike } from "@/app/_components/icon/icons";
 import { Timer } from "@/app/_components/timer/timer";
-import { API_URL } from "@/configs/global";
+import { API_URL, TOKEN } from "@/configs/global";
 import { createData, readData } from "@/core/http-service/http-service";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
@@ -47,7 +47,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     productId: product?._id,
                 },
                 {
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyODAzMzUwNDhiY2M2MzM2ZWM1ZjY5IiwiZW1haWwiOiJra2VmZnJAamRqZC5jb20iLCJpYXQiOjE3MTM4OTgyOTksImV4cCI6MTcxMzkyNzA5OX0.dLnOV6Uhz9Af-dZYB71xHfka6e4YzLA2CjCV1oF0zt0",
+                    token: TOKEN,
                 }
             );
             !!res.success && setLiked(!liked);
@@ -60,7 +60,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const getLikedProducts = async () => {
         try {
             const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`, {
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyODAzMzUwNDhiY2M2MzM2ZWM1ZjY5IiwiZW1haWwiOiJra2VmZnJAamRqZC5jb20iLCJpYXQiOjE3MTM4OTgyOTksImV4cCI6MTcxMzkyNzA5OX0.dLnOV6Uhz9Af-dZYB71xHfka6e4YzLA2CjCV1oF0zt0",
+                token: TOKEN,
             });
 
             !!res.data && setLikedProducts(res.data);

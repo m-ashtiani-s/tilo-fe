@@ -9,16 +9,18 @@ import "swiper/css/pagination";
 import { useEffect, useState } from "react";
 import ProductCart from "../productCart/productCart";
 import { readData } from "@/core/http-service/http-service";
-import { API_URL } from "@/configs/global";
+import { API_URL, TOKEN } from "@/configs/global";
 import { Res } from "@/types/responseType";
 import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { headers } from "next/headers";
+import { useNotificationStore } from "@/stores/notification.store";
 
 export default function ProductSlider() {
 	const [width, setWidth] = useState<number>(0); // Initialize width with 0
 	const [lastTenProducts, setLastTenProducts] = useState<Product[]>([]);
 	const [likedProducts, setLikedProducts] = useState<Product[]>([]);
+	const showNotification = useNotificationStore((state) => state.showNotification);
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -48,10 +50,19 @@ export default function ProductSlider() {
 	}
 	async function fetchLikedProducts() {
 		try {
-			const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`, );
+			const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`,{
+				
+					token: TOKEN,
+				
+			} );
 			!!res.data && setLikedProducts(res?.data);
-		} catch (ree) {
-            console.log(ree)
+			console.log(res)
+		} catch (err:any) {
+			console.log(err)
+            showNotification({
+				message: err?.message,
+				type: "error",
+			});
         }
 	}
 	return (
