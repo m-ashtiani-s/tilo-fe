@@ -1,7 +1,7 @@
 'use client'
 
 import ProductCart from "@/app/_components/productCart/productCart";
-import { API_URL, TOKEN } from "@/configs/global";
+import { API_URL } from "@/configs/global";
 import { createData, readData } from "@/core/http-service/http-service";
 import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { getCsrfToken, signOut, useSession } from "next-auth/react"
 
 export default function Page() {
+    const {data:session}=useSession()
     const [products, setProducts] = useState<Product[]>([]);
     const [likedProducts, setLikedProducts] = useState<Product[]>([]);
     const mount = useRef<boolean>(false);
@@ -36,9 +37,7 @@ export default function Page() {
     };
     const getLikedProducts = async () => {
         try {
-            const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`, {
-                token: TOKEN,
-            });
+            const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`);
 
             !!res.data && setLikedProducts(res.data);
         } catch (error) {
@@ -46,8 +45,6 @@ export default function Page() {
         } finally {
         }
     };
-const {data:session}=useSession()
-    console.log('ses',session)
 
     return (
         <>
@@ -76,7 +73,7 @@ const {data:session}=useSession()
                             <div className="flex flex-wrap">
                                 {products?.map((product: any) => (
                                     <div className="w-4/12 p-3">
-                                        <ProductCart product={product} likedProducts={likedProducts} />
+                                        <ProductCart product={product} likedProducts={likedProducts} loggedIn={!!session} />
                                     </div>
                                 ))}
                             </div>

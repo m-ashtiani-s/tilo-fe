@@ -1,5 +1,4 @@
 export const API_URL=process.env.NEXT_PUBLIC_API_URL;
-export const TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjYyZDZjZTdjMzhlYWQwMzA1ZWFiMTZiIiwiZW1haWwiOiJra2VmZmZyQGpkamQuY29tIiwiaWF0IjoxNzE0MjUzMDQwLCJleHAiOjE3MTQyODE4NDB9.Idc4XjwJnrPal5X9ROenvjpQUuySQJb9EPtlfMOdblQ";
 
 export const IS_DEVELOPMENT=process.env.NODE_ENV==='development'
 export const IS_PRODUCTION=process.env.NODE_ENV==='production'

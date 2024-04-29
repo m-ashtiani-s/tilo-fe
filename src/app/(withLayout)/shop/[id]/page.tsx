@@ -3,7 +3,7 @@
 import { Button } from "@/app/_components/button/button";
 import { IconArrow, IconLike } from "@/app/_components/icon/icons";
 import { Timer } from "@/app/_components/timer/timer";
-import { API_URL, TOKEN } from "@/configs/global";
+import { API_URL } from "@/configs/global";
 import { createData, readData } from "@/core/http-service/http-service";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
@@ -45,9 +45,6 @@ export default function Page({ params }: { params: { id: string } }) {
                 `${API_URL}/v1/like`,
                 {
                     productId: product?._id,
-                },
-                {
-                    token: TOKEN,
                 }
             );
             !!res.success && setLiked(!liked);
@@ -59,9 +56,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
     const getLikedProducts = async () => {
         try {
-            const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`, {
-                token: TOKEN,
-            });
+            const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`);
 
             !!res.data && setLikedProducts(res.data);
         } catch (error) {

@@ -44,6 +44,7 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
                         accessToken: verifyResponse.data.token,
                     };
                 } catch (error: unknown) {
+                    console.log('ghgh')
                     throw new Error("");
                 }
             },
@@ -53,11 +54,20 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
         async jwt({ token, user }) {
             if (user) {
                 token.user = jwtDecode<any>(user.accessToken);
+                token.accessToken=user.accessToken
             }
+            console.log(token)
+            // token.accessToken=user.accessToken
             return token;
         },
+        
         async session({ session, token }) {
-            Object.assign(session.user, token.user ?? {});
+            const userData={
+                user:token.user,
+                accessToken:token.accessToken
+            }
+            session.user= userData
+            // Object.assign(session.user, userData ?? {});
             return session;
         },
     },

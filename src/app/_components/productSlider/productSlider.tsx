@@ -9,14 +9,16 @@ import "swiper/css/pagination";
 import { useEffect, useState } from "react";
 import ProductCart from "../productCart/productCart";
 import { readData } from "@/core/http-service/http-service";
-import { API_URL, TOKEN } from "@/configs/global";
+import { API_URL } from "@/configs/global";
 import { Res } from "@/types/responseType";
 import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { headers } from "next/headers";
 import { useNotificationStore } from "@/stores/notification.store";
+import { useSession } from "next-auth/react";
 
 export default function ProductSlider() {
+	const {data:session}=useSession()
 	const [width, setWidth] = useState<number>(0); // Initialize width with 0
 	const [lastTenProducts, setLastTenProducts] = useState<Product[]>([]);
 	const [likedProducts, setLikedProducts] = useState<Product[]>([]);
@@ -50,11 +52,7 @@ export default function ProductSlider() {
 	}
 	async function fetchLikedProducts() {
 		try {
-			const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`,{
-				
-					token: TOKEN,
-				
-			} );
+			const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`);
 			!!res.data && setLikedProducts(res?.data);
 			console.log(res)
 		} catch (err:any) {
@@ -78,7 +76,7 @@ export default function ProductSlider() {
 		>
 			{lastTenProducts?.map((slide: any, index: number) => (
 				<SwiperSlide key={index}>
-					<ProductCart product={slide} likedProducts={likedProducts} />
+					<ProductCart product={slide} likedProducts={likedProducts} loggedIn={!!session} />
 				</SwiperSlide>
 			))}
 		</Swiper>
