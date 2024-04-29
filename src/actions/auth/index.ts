@@ -9,6 +9,7 @@ import { serverActionWrapper } from "./server-action-wrapper";
 // import { SendAuthCode } from "@/app/(auth)/verify/_types/verify-user.type";
 import { Problem } from "@/types/http-errors.interface";
 import { Register } from "@/app/(withoutLayout)/(auth)/register/_components/registerForn.types";
+import { signIn } from "@/auth";
 
 export async function RegisterAction(
     formState: any | null,
@@ -53,17 +54,17 @@ export async function RegisterAction(
 // }
 
 
-// export async function verify(state: Problem | undefined, formData: FormData) {
-//     try {
-//         console.log('ff')
-//     } catch (error) {
-//         // todo
-//         return {
-//             status: 0,
-//             title: "",
-//         } satisfies Problem;
-//     }
-// }
+export async function verify(state: any, formData: FormData) {
+    try {
+        await signIn("credentials", formData);
+    } catch (error) {
+        // todo
+        return {
+            status: 0,
+            title: "",
+        } satisfies Problem;
+    }
+}
 
 // export async function logout() {
 //     console.log('ff')

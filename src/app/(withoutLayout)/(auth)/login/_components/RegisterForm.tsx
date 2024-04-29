@@ -11,10 +11,11 @@ import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/stores/notification.store";
 import { Button } from "@/app/_components/button/button";
-import { RegisterAction } from "@/actions/auth";
+import { RegisterAction, verify } from "@/actions/auth";
 import { AnyARecord } from "dns";
 import { Login } from "./loginForn.types";
 import { loginSchema } from "../_types/login.schema";
+import { signOut } from "next-auth/react";
 
 const RegisterForm = () => {
 	const [formValues, setFormValues] = useState<ContactFormtype>({});
@@ -36,32 +37,32 @@ const RegisterForm = () => {
 		resolver: zodResolver(loginSchema),
 	});
 
-	const [formState, action] = useFormState(RegisterAction, null);
+	const [formState, action] = useFormState(verify, null);
 	const [isPending, startTransition] = useTransition();
 
 	const router = useRouter();
 
 	const showNotification = useNotificationStore((state) => state.showNotification);
 
-	useEffect(() => {
-		if (formState && !formState.isSuccess && formState.error) {
-			console.log(formState.error);
-			formState?.error?.data?.map((d: any) => {
-				showNotification({
-					message: d.message,
-					type: "error",
-				});
-			});
-		} else if (formState && formState.isSuccess) {
-			showNotification({
-				message: "you signed up successfully.",
-				type: "info",
-			});
-			setTimeout(() => {
-				router.push(`/login`);
-			}, 2000);
-		}
-	}, [formState, showNotification, router, getValues]);
+	// useEffect(() => {
+	// 	if (formState && !formState.isSuccess && formState.error) {
+	// 		console.log(formState.error);
+	// 		formState?.error?.data?.map((d: any) => {
+	// 			showNotification({
+	// 				message: d.message,
+	// 				type: "error",
+	// 			});
+	// 		});
+	// 	} else if (formState && formState.isSuccess) {
+	// 		showNotification({
+	// 			message: "you signed up successfully.",
+	// 			type: "info",
+	// 		});
+	// 		setTimeout(() => {
+	// 			router.push(`/login`);
+	// 		}, 2000);
+	// 	}
+	// }, [formState, showNotification, router, getValues]);
 
 	const onSubmit = (data: Login) => {
 		const formData = new FormData();
@@ -70,27 +71,24 @@ const RegisterForm = () => {
 		startTransition(async () => {
 			await action(formData);
 		});
+		console.log(formData)
 	};
+
+	async function myFunction() {
+        const csrfToken = await signOut()
+        /* ... */
+      }
 
 	return (
 		<div className="w-9/12">
 			<div className="text-4xl font-medium text-neutral-7">Sign up</div>
 			<div className=" font-medium text-neutral-4 mt-6">
 				Already have a account?{" "}
-				<Link className="text-secondary-green font-semibold" href="/login">
+				<span className="text-secondary-green font-semibold" onClick={myFunction}>
 					Login
-				</Link>
+				</span>
 			</div>
 			<div className="mt-4">
-				{/* <Input
-				placeholder="Your Name"
-				className="w-full"
-				name="fullName"
-				value={formValues?.fullName}
-				onChange={handleChange}
-				setValue={setFormValues}
-				groupValue={true}
-			/> */}
 				<form className="flex flex-col gap-6 mt-16" onSubmit={handleSubmit(onSubmit)}>
 					<TextInput<Login> register={register} name={"personData"} errors={errors} placeholder="userName" />
 					<TextInput<Login> register={register} name={"password"} errors={errors} placeholder="password" />

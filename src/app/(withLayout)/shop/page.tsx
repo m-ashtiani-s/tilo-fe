@@ -1,13 +1,14 @@
 'use client'
 
 import ProductCart from "@/app/_components/productCart/productCart";
-import { API_URL } from "@/configs/global";
+import { API_URL, TOKEN } from "@/configs/global";
 import { createData, readData } from "@/core/http-service/http-service";
 import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { getCsrfToken, signOut, useSession } from "next-auth/react"
 
 export default function Page() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -45,8 +46,8 @@ export default function Page() {
         } finally {
         }
     };
-
-    console.log(likedProducts)
+const {data:session}=useSession()
+    console.log('ses',session)
 
     return (
         <>
