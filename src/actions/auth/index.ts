@@ -10,34 +10,33 @@ import { serverActionWrapper } from "./server-action-wrapper";
 import { Problem } from "@/types/http-errors.interface";
 import { Register } from "@/app/(withoutLayout)/(auth)/register/_components/registerForn.types";
 import { signIn } from "@/auth";
+import { API_URL } from "@/configs/global";
 
-export async function RegisterAction(
-    formState: any | null,
-    formData: FormData
-) {
-     const name = formData.get("name") as string;
-     const email = formData.get("email") as string;
-     const userName = formData.get("userName") as string;
-     const password = formData.get("password") as string;
-    // const validatedData = signInSchema.safeParse({
-    //     mobile,
-    // });
+export async function RegisterAction(formState: any | null, formData: FormData) {
+	const name = formData.get("name") as string;
+	const email = formData.get("email") as string;
+	const userName = formData.get("userName") as string;
+	const password = formData.get("password") as string;
+	// const validatedData = signInSchema.safeParse({
+	//     mobile,
+	// });
 
-    // if (!validatedData.success) {
-    //     return {
-    //         message: "خطا در فرمت موبایل",
-    //     };
-    // } else {
-        return serverActionWrapper(
-            async () =>
-                await createData<Register, string>("/register", {
-                    name,
-                    email,
-                    userName,
-                    password
-                })
-        );
-    // }
+	// if (!validatedData.success) {
+	//     return {
+	//         message: "خطا در فرمت موبایل",
+	//     };
+	// } else {
+
+	return serverActionWrapper(
+		async () =>
+			await createData<Register, string>(`${API_URL}/v1/register`, {
+				name,
+				email,
+				userName,
+				password,
+			})
+	);
+	// }
 }
 
 // export async function sendAuthCode(
@@ -53,17 +52,28 @@ export async function RegisterAction(
 //     );
 // }
 
-
 export async function verify(state: any, formData: FormData) {
-    try {
-        await signIn("credentials", formData);
-    } catch (error) {
-        // todo
-        return {
-            status: 0,
-            title: "",
-        } satisfies Problem;
-    }
+	const personData = formData.get("personData") as string;
+	const password = formData.get("password") as string;
+	try {
+		const res = await signIn("credentials", { personData, password });
+	}catch (error:any) {
+        console.log('qq',error?.message)
+        if(!!error?.success){
+            return {
+                success: true,
+                message: "login ss",
+                data: null,
+            };
+        }else{
+            return {
+                success: false,
+                message: "login failed | try again",
+                data: null,
+            };
+        }
+		
+	}
 }
 
 // export async function logout() {

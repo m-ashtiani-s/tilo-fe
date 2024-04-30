@@ -43,13 +43,18 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
                     return {
                         accessToken: verifyResponse.data.token,
                     };
-                } catch (error: unknown) {
-                    console.log('ghgh')
-                    throw new Error("");
+                } catch (error: any) {
+                    throw (error);
+                    
                 }
+
+
             },
         }),
     ],
+    session:{
+        maxAge:60*60*48
+    },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {

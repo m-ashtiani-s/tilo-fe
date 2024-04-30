@@ -15,7 +15,7 @@ import { RegisterAction, verify } from "@/actions/auth";
 import { AnyARecord } from "dns";
 import { Login } from "./loginForn.types";
 import { loginSchema } from "../_types/login.schema";
-import { signOut } from "next-auth/react";
+import { signOut,signIn } from "next-auth/react";
 
 const RegisterForm = () => {
 	const [formValues, setFormValues] = useState<ContactFormtype>({});
@@ -44,48 +44,60 @@ const RegisterForm = () => {
 
 	const showNotification = useNotificationStore((state) => state.showNotification);
 
-	// useEffect(() => {
-	// 	if (formState && !formState.isSuccess && formState.error) {
-	// 		console.log(formState.error);
-	// 		formState?.error?.data?.map((d: any) => {
-	// 			showNotification({
-	// 				message: d.message,
-	// 				type: "error",
-	// 			});
-	// 		});
-	// 	} else if (formState && formState.isSuccess) {
-	// 		showNotification({
-	// 			message: "you signed up successfully.",
-	// 			type: "info",
-	// 		});
-	// 		setTimeout(() => {
-	// 			router.push(`/login`);
-	// 		}, 2000);
-	// 	}
-	// }, [formState, showNotification, router, getValues]);
+	useEffect(() => {
+		// if (formState && !formState.success) {
+		// 	showNotification({
+		// 		message: formState?.message,
+		// 		type: "error",
+		// 	});
+		// } else if (formState && formState.success) {
+		// 	showNotification({
+		// 		message: "you signed up successfully.",
+		// 		type: "info",
+		// 	});
+		// 	setTimeout(() => {
+		// 		router.push(`/`);
+		// 	}, 1000);
+		// }
+		console.log(formState)
+	}, [formState, showNotification, router, getValues]);
 
 	const onSubmit = (data: Login) => {
 		const formData = new FormData();
 		formData.append("personData", data.personData);
 		formData.append("password", data.password);
+
+		const user = {
+			personData: data.personData,
+			password: data.password,
+		};
 		startTransition(async () => {
 			await action(formData);
 		});
-		console.log(formData)
+		// login(user)
 	};
 
 	async function myFunction() {
-        const csrfToken = await signOut()
-        /* ... */
-      }
+		await signOut();
+	}
+	// async function login(user:any) {
+	// 	try{
+	// 		await signIn('credentials',user);
+	// 	}catch(err){
+	// 		console.log('popo',err)
+	// 	}
+	// }
 
 	return (
 		<div className="w-9/12">
-			<div className="text-4xl font-medium text-neutral-7">Sign up</div>
+			<div className="text-4xl font-medium text-neutral-7">Login</div>
 			<div className=" font-medium text-neutral-4 mt-6">
-				Already have a account?{" "}
-				<span className="text-secondary-green font-semibold" onClick={myFunction}>
-					Login
+				Dont have account?{" "}
+				<Link className="text-secondary-green font-semibold" href="/register">
+					Sign up
+				</Link>
+				<span className="text-secondary-green font-semibold ml-5" onClick={myFunction}>
+					logout
 				</span>
 			</div>
 			<div className="mt-4">

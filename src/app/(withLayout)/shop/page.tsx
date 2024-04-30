@@ -45,7 +45,7 @@ export default function Page() {
         } finally {
         }
     };
-
+console.log(session)
     return (
         <>
             <section className="h-140">

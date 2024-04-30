@@ -69,7 +69,7 @@ async function createData<TModel, TResult>(
     const token=!url.includes('login') ? await getToken() : ''
 	const options: AxiosRequestConfig = {
 		method: "POST",
-		headers: { ...headers, token: 'token' } || {},
+		headers: { ...headers, token: token } || {},
 		data: JSON.stringify(data),
 	};
 
