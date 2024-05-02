@@ -48,7 +48,13 @@ export default function ProductSlider() {
 		try {
 			const res = await readData<Res<Paginate<Product>>>(`${API_URL}/v1/products`);
 			!!res.data && setLastTenProducts(res.data?.elements);
-		} catch (ree) {}
+		} catch (err:any) {
+			console.log(err)
+            showNotification({
+				message: err?.message || 'loading product failed',
+				type: "error",
+			});
+		}
 	}
 	async function fetchLikedProducts() {
 		try {
@@ -56,11 +62,7 @@ export default function ProductSlider() {
 			!!res.data && setLikedProducts(res?.data);
 			console.log(res)
 		} catch (err:any) {
-			console.log(err)
-            showNotification({
-				message: err?.message,
-				type: "error",
-			});
+			
         }
 	}
 	return (

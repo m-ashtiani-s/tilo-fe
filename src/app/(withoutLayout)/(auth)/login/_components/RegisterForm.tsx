@@ -45,18 +45,14 @@ const RegisterForm = () => {
 			});
 		} else {
 			showNotification({
-				message: 'Login successfull',
+				message: "Login successfull",
 				type: "success",
 			});
 			setTimeout(() => {
-				router.push('/')
+				router.push("/");
 			}, 1000);
 		}
 	};
-
-	async function myFunction() {
-		await signOut();
-	}
 
 	return (
 		<div className="w-9/12">
@@ -66,9 +62,6 @@ const RegisterForm = () => {
 				<Link className="text-secondary-green font-semibold" href="/register">
 					Sign up
 				</Link>
-				<span className="text-secondary-green font-semibold ml-5" onClick={myFunction}>
-					logout
-				</span>
 			</div>
 			<div className="mt-4">
 				<form className="flex flex-col gap-6 mt-16" onSubmit={handleSubmit(onSubmit)}>
@@ -76,6 +69,9 @@ const RegisterForm = () => {
 					<TextInput<Login> register={register} name={"password"} errors={errors} placeholder="password" />
 
 					<Button type="submit">Sign Up</Button>
+					<Link className="text-secondary-green text-center font-semibold" href="/">
+						Home Page
+					</Link>
 				</form>
 			</div>
 		</div>

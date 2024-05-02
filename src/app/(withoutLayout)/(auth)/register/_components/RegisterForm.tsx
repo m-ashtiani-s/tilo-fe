@@ -84,6 +84,9 @@ const RegisterForm = () => {
 					<TextInput<Register> register={register} name={"password"} errors={errors} placeholder="password" />
 
 					<Button loadingText="Signing up..." isLoading={loading} disabled={loading} type="submit">Sign Up</Button>
+					<Link className="text-secondary-green text-center font-semibold" href="/">
+						Home Page
+					</Link>
 				</form>
 			</div>
 		</div>

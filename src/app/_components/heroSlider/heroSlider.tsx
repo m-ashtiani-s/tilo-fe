@@ -53,6 +53,7 @@ export default function HeroSlider() {
 				clickable: true,
 			}}
 			spaceBetween={0}
+			simulateTouch={false}
 			modules={[Autoplay,Navigation, Pagination]}
 			slidesPerView={1}
 			className="mySwiper custom-swipper hero-slider"
