@@ -15,11 +15,12 @@ import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { headers } from "next/headers";
 import { useNotificationStore } from "@/stores/notification.store";
-import { useSession } from "next-auth/react";
+import { useSessionStore } from "@/stores/session";
+import { Session } from "@/types/session";
 
 export default function ProductSlider() {
-	const {data:session}=useSession()
-	const [width, setWidth] = useState<number>(0); // Initialize width with 0
+	const { session }: { session: Session | null } = useSessionStore();
+	const [width, setWidth] = useState<number>(0); 
 	const [lastTenProducts, setLastTenProducts] = useState<Product[]>([]);
 	const [likedProducts, setLikedProducts] = useState<Product[]>([]);
 	const showNotification = useNotificationStore((state) => state.showNotification);
@@ -76,7 +77,7 @@ export default function ProductSlider() {
 			slidesPerView={4}
 			className="mySwiper custom-swipper"
 		>
-			{lastTenProducts?.map((slide: any, index: number) => (
+			{lastTenProducts?.map((slide, index: number) => (
 				<SwiperSlide key={index}>
 					<ProductCart product={slide} likedProducts={likedProducts} loggedIn={!!session} />
 				</SwiperSlide>

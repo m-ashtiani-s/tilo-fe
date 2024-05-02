@@ -2,16 +2,17 @@
 
 import ProductCart from "@/app/_components/productCart/productCart";
 import { API_URL } from "@/configs/global";
-import { createData, readData } from "@/core/http-service/http-service";
+import { readData } from "@/core/http-service/http-service";
 import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { getCsrfToken, signOut, useSession } from "next-auth/react"
+import { useSessionStore } from "@/stores/session";
+import { Session } from "@/types/session";
 
 export default function Page() {
-    const {data:session}=useSession()
+    const { session }: { session: Session | null } = useSessionStore();
     const [products, setProducts] = useState<Product[]>([]);
     const [likedProducts, setLikedProducts] = useState<Product[]>([]);
     const mount = useRef<boolean>(false);
@@ -71,7 +72,7 @@ console.log(session)
                         <div className="w-3/12"></div>
                         <div className="w-9/12">
                             <div className="flex flex-wrap">
-                                {products?.map((product: any) => (
+                                {products?.map((product) => (
                                     <div className="w-4/12 p-3">
                                         <ProductCart product={product} likedProducts={likedProducts} loggedIn={!!session} />
                                     </div>

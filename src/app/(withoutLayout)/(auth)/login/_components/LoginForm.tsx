@@ -1,21 +1,15 @@
 "use client";
 
 import { TextInput } from "@/app/_components/form-input";
-import Input from "@/app/_components/input/input";
-import { ContactFormtype } from "@/types/contactForm.types";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/stores/notification.store";
 import { Button } from "@/app/_components/button/button";
-import { RegisterAction, verify } from "@/actions/auth";
-import { AnyARecord } from "dns";
 import { Login } from "./loginForn.types";
 import { loginSchema } from "../_types/login.schema";
-import { signOut, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import {} from "@/auth";
 
 const RegisterForm = () => {

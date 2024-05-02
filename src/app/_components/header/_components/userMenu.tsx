@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import { IconArrow, IconArrowRight, IconBasket, IconClose, IconLike, IconLogout } from "../../icon/icons";
 import { signOut } from "next-auth/react";
 
-const UserMenu = ({ setOpen }: { setOpen: any }) => {
+const UserMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const addressRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {

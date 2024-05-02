@@ -7,6 +7,9 @@ import { createData } from "./core/http-service/http-service";
 import { API_URL } from "./configs/global";
 import { jwtDecode } from "jwt-decode";
 import { JWT } from "next-auth/jwt";
+import { SessionUser, userInSession } from "./types/session";
+import { UserLogin } from "./types/user";
+import { Res } from "./types/responseType";
 
 declare module "next-auth" {
 	interface User {
@@ -14,14 +17,14 @@ declare module "next-auth" {
 	}
 
 	interface Session {
-		user: any;
+		user: SessionUser;
 	}
 }
 
 declare module "next-auth/jwt" {
 	interface JWT {
-		user: any;
-		role: string;
+		user: userInSession;
+		accessToken: string;
 	}
 }
 
@@ -35,13 +38,16 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 			},
 			async authorize(credentials) {
 				try {
-					const verifyResponse = await createData<any, any>(`${API_URL}/v1/login`, {
-						personData: credentials.personData as string,
-						password: credentials.password as string,
-					});
+					const verifyResponse = await createData<{ personData: string; password: string }, Res<UserLogin>>(
+						`${API_URL}/v1/login`,
+						{
+							personData: credentials.personData as string,
+							password: credentials.password as string,
+						}
+					);
 
 					return {
-						accessToken: verifyResponse.data.token,
+						accessToken: verifyResponse?.data?.token,
 					};
 				} catch (error: any) {
 					return error;
@@ -56,18 +62,17 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 	secret: process.env.AUTH_SECRET,
 	callbacks: {
 		async signIn({ user, account, profile, email, credentials }) {
-            //@ts-ignore
-			if (!!user.success ) {
+			//@ts-ignore
+			if (!!user.success) {
 				throw new Error("custom error to the client");
 			}
 			return true;
 		},
 		async jwt({ token, user }) {
 			if (user) {
-				token.user = jwtDecode<any>(user.accessToken);
+				token.user = jwtDecode<userInSession>(user.accessToken);
 				token.accessToken = user.accessToken;
 			}
-			console.log(token);
 			// token.accessToken=user.accessToken
 			return token;
 		},
@@ -77,8 +82,7 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 				user: token.user,
 				accessToken: token.accessToken,
 			};
-			session.user = userData;
-			// Object.assign(session.user, userData ?? {});
+			Object.assign(session.user, userData ?? {});
 			return session;
 		},
 	},

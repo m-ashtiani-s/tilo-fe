@@ -8,7 +8,7 @@ import { IconArrow, IconArrowRight, IconBasket, IconClose, IconLike, IconLogin, 
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 
-const UserLoginMenu = ({ setOpen }: { setOpen: any }) => {
+const UserLoginMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const addressRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {

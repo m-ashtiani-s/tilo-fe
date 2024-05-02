@@ -64,10 +64,12 @@ async function readData<T>(url: string, headers?: AxiosRequestConfig["headers"])
 async function createData<TModel, TResult>(
 	url: string,
 	data: TModel,
+	headers?: AxiosRequestConfig["headers"]
 ): Promise<TResult> {
-    // const token=!url.includes('login') ? await getToken() : ''
+    const token=!url.includes('login') ? await getToken() : ''
 	const options: AxiosRequestConfig = {
 		method: "POST",
+		headers: { ...headers, token: token } || {},
 		data: JSON.stringify(data),
 	};
 

@@ -1,15 +1,10 @@
 "use client";
-// @ts-ignore
 import { Swiper, SwiperSlide } from "swiper/react";
-// @ts-ignore
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Slide, SliderProps } from "./heroSlider.types";
-import { Avatar } from "../avatar";
 import { useEffect, useState } from "react";
-// import { slides } from "@/data/slides";
 
 const slides = [
 	{
@@ -60,7 +55,7 @@ export default function HeroSlider() {
 			// onSlideChange={() => console.log("slide change")}
 			// onSwiper={(swiper) => console.log(swiper)}
 		>
-			{slides?.map((slide: any, index: number) => (
+			{slides?.map((slide, index: number) => (
 				<SwiperSlide key={slide?.image + index}>
 					<div className={`${slide.image} h-140 bg-cover bg-no-repeat bg-bottom`}></div>
 				</SwiperSlide>

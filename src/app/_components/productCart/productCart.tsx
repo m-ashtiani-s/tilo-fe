@@ -9,14 +9,16 @@ import { API_URL } from "@/configs/global";
 import { useEffect, useState } from "react";
 import { Res } from "@/types/responseType";
 import { Product } from "@/types/product";
+import { useNotificationStore } from "@/stores/notification.store";
 
 interface Iprops {
-	product: any;
+	product: Product;
 	likedProducts: Product[] | null;
 	loggedIn: boolean;
 }
 
 export default function ProductCart({ product, likedProducts, loggedIn = false }: Iprops) {
+	const showNotification = useNotificationStore((state) => state.showNotification);
 	const [liked, setLiked] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -28,7 +30,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 
 	const likeProductHandler = async () => {
 		try {
-			const res = await createData<any, Res<Product>>(`${API_URL}/v1/like`, {
+			const res = await createData<{ productId: string }, Res<Product>>(`${API_URL}/v1/like`, {
 				productId: product?._id,
 			});
 			!!res.success && setLiked(!liked);
@@ -38,7 +40,29 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 		}
 	};
 
-    console.log(loggedIn)
+	const addTocartHandler = () => {
+		!!product?._id && addToCart(product?._id, 1);
+	};
+
+	const addToCart = async (productId: string, quantity: number) => {
+		try {
+			const res = await createData<{ productId: string; quantity: number }, Res<null>>(`${API_URL}/v1/cart`, {
+				productId: productId,
+				quantity: quantity,
+			});
+			showNotification({
+				message: res?.message,
+				type: "success",
+			});
+			!!res.success && setLiked(!liked);
+		} catch (error: any) {
+			showNotification({
+				message: error?.message || "add to cart failed",
+				type: "error",
+			});
+		} finally {
+		}
+	};
 
 	return (
 		<div>
@@ -49,7 +73,9 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					</Link>
 
 					<div className="w-10/12 absolute left-[8.33333%] bottom-6">
-						<Button className="w-full">add to cart</Button>
+						<Button className="w-full" onClick={addTocartHandler}>
+							add to cart
+						</Button>
 					</div>
 					<span className="absolute text-neutral-7 leading-4 py-1 px-4 rounded bg-white top-4 left-4 text-sm font-semibold">
 						NEW

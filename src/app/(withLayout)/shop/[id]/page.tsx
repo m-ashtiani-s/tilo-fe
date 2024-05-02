@@ -2,9 +2,11 @@
 
 import { Button } from "@/app/_components/button/button";
 import { IconArrow, IconLike } from "@/app/_components/icon/icons";
+import { Quantity } from "@/app/_components/quantity/quantity";
 import { Timer } from "@/app/_components/timer/timer";
 import { API_URL } from "@/configs/global";
 import { createData, readData } from "@/core/http-service/http-service";
+import { useNotificationStore } from "@/stores/notification.store";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
 import Link from "next/link";
@@ -12,6 +14,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
     const { id } = params;
+    const [quantity,setQuantity]=useState<number>(1)
+    const showNotification = useNotificationStore((state) => state.showNotification);
     const [liked, setLiked] = useState<boolean>(false);
     const [product, setProduct] = useState<Product>();
     const [likedProducts, setLikedProducts] = useState<Product[]>([]);
@@ -30,6 +34,12 @@ export default function Page({ params }: { params: { id: string } }) {
         });
     }, [likedProducts]);
 
+   
+
+    const addToCartHandler=()=>{
+        !!product?._id && addToCart(product?._id,quantity)
+    }
+
     const getProduct = async (id: string) => {
         try {
             const res = await readData<Res<Product>>(`${API_URL}/v1/products/${id}`);
@@ -41,7 +51,7 @@ export default function Page({ params }: { params: { id: string } }) {
     };
     const likeProductHandler = async () => {
         try {
-            const res = await createData<any, Res<Product>>(
+            const res = await createData<{productId?:string}, Res<Product>>(
                 `${API_URL}/v1/like`,
                 {
                     productId: product?._id,
@@ -51,6 +61,32 @@ export default function Page({ params }: { params: { id: string } }) {
         } catch (error) {
             console.log("error: ", error);
         } finally {
+        }
+    };
+    const addToCart = async (productId:string,quantity:number) => {
+        try {
+            const res = await createData<{
+                productId: string,
+                quantity:number
+            }, Res<null>>(
+                `${API_URL}/v1/cart`,
+                {
+                    productId: productId,
+                    quantity:quantity
+                }
+            );
+            showNotification({
+				message: res?.message,
+				type: "success",
+			});
+            !!res.success && setLiked(!liked);
+        } catch (error:any) {
+            showNotification({
+				message: error?.message || 'add to cart failed',
+				type: "error",
+			});
+        } finally {
+            setQuantity(1)
         }
     };
 
@@ -137,11 +173,14 @@ export default function Page({ params }: { params: { id: string } }) {
                                     </div>
                                 </div>
                                 <div className="mt-8 flex gap-4">
-                                    <div className="flex py-3 px-6 justify-between gap-2 bg-[#F5F5F5] text-neutral-4">
-                                        <span className="p-1 cursor-pointer">-</span>
-                                        <span className="p-1">1</span>
-                                        <span className="p-1 cursor-pointer">+</span>
-                                    </div>
+                                    <Quantity quantity={quantity} setQuantity={setQuantity}/>
+                                    <Button className="w-full h-[52px]" onClick={addToCartHandler}>
+                                        <div className="text-base">Add to Cart</div>
+                                    </Button>
+                                    
+                                </div>
+                                <div className="mt-4 flex gap-4">
+                                   
                                     <Button onClick={likeProductHandler} isOutline={true} className="w-full flex items-center justify-center gap-3">
                                         <IconLike
                                             className={` hover:fill-red-500 duration-200 cursor-pointer  hover:stroke-neutral-4/0 ${
@@ -149,11 +188,6 @@ export default function Page({ params }: { params: { id: string } }) {
                                             }`}
                                         />
                                         Wishlist
-                                    </Button>
-                                </div>
-                                <div className="mt-4 flex gap-4">
-                                    <Button className="w-full h-[52px]">
-                                        <div className="text-base">Add to Cart</div>
                                     </Button>
                                 </div>
                                 <div className="w-10/12 bg-neutral-4/20 h-0.25 my-6"></div>

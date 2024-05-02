@@ -16,46 +16,19 @@ import {
 	IconSearch,
 	IconUser,
 } from "../icon/icons";
-import { useSession } from "next-auth/react";
 import UserMenu from "./_components/userMenu";
 import UserLoginMenu from "./_components/loginMenu";
+import { useCartStore } from "@/stores/cart.store";
+import { routs } from "@/data/routs";
+import { useSessionStore } from "@/stores/session";
+import { Cart } from "@/types/cart";
+import { Session } from "@/types/session";
 
 export const Header: React.FC = () => {
-	const { data: session } = useSession();
+	const { cart }: { cart: Cart | null } = useCartStore();
+	const { session }: { session: Session | null } = useSessionStore();
 	const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
 	const pathname = usePathname();
-	const [routs, setRouts] = useState<Routs[]>([
-		{
-			title: "Home",
-			href: "/",
-			subRoute: null,
-			isOpen: false,
-		},
-		{
-			title: "Shop",
-			href: "/shop",
-			subRoute: null,
-			isOpen: false,
-		},
-		{
-			title: "Product",
-			href: "/product",
-			subRoute: null,
-			isOpen: false,
-		},
-		{
-			title: "Contact Us",
-			href: "/contact-us",
-			subRoute: null,
-			isOpen: false,
-		},
-		{
-			title: "Blog",
-			href: "/blog",
-			subRoute: null,
-			isOpen: false,
-		},
-	]);
 
 	let [open, setOpen] = useState(false);
 	const addressRef = useRef<HTMLDivElement>(null);
@@ -75,34 +48,7 @@ export const Header: React.FC = () => {
 		setOpen(false);
 	}, [pathname]);
 
-	useEffect(() => {
-		setAccordionOpen(false);
-	}, [open]);
-	const [accordionOpen, setAccordionOpen] = useState(false);
-
-	const handleMouseEnter = (item: Routs) => {
-		if (!!item?.subRoute) {
-			const updatedRouts = routs.map((route) => {
-				if (route.href === item.href) {
-					return { ...route, isOpen: true };
-				}
-				return route;
-			});
-			setRouts(updatedRouts);
-		}
-	};
-	const handleMouseLeave = (item: Routs) => {
-		if (!!item?.subRoute) {
-			const updatedRouts = routs.map((route) => {
-				if (route.href === item.href) {
-					return { ...route, isOpen: false };
-				}
-				return route;
-			});
-			setRouts(updatedRouts);
-		}
-	};
-
+	console.log(session);
 	return (
 		<>
 			<div className="h-10 bg-neutral-2 hidden lg:block">
@@ -137,12 +83,7 @@ export const Header: React.FC = () => {
 						<div className="w-8/12">
 							<ul className="mr-4 flex flex-row items-center gap-8 justify-center">
 								{routs.map((item) => (
-									<li
-										onMouseEnter={() => handleMouseEnter(item)}
-										onMouseLeave={() => handleMouseLeave(item)}
-										key={item.href}
-										className="relative "
-									>
+									<li key={item.href} className="relative ">
 										<Link
 											className={` hover:text-secondary-green transition flex gap-1 items-center ${
 												item.href !== "/" && pathname.includes(item.href)
@@ -177,9 +118,8 @@ export const Header: React.FC = () => {
 										{userMenuOpen && <UserMenu setOpen={setUserMenuOpen} />}
 									</div>
 								) : (
-
 									<div className="flex relative">
-										<div 
+										<div
 											className="flex cursor-pointer relative"
 											onClick={() => setUserMenuOpen(true)}
 										>
@@ -189,10 +129,10 @@ export const Header: React.FC = () => {
 										{userMenuOpen && <UserLoginMenu setOpen={setUserMenuOpen} />}
 									</div>
 								)}
-								<div className="flex items-center gap-2">
+								<div className="flex items-center gap-2 relative">
 									<IconBasket stroke="#28303F" strokeWidth={1.5} />
-									<span className="bg-neutral-7 rounded-full w-6 h-6 flex items-center justify-center text-white">
-										2
+									<span className="bg-neutral-7 rounded-full w-5 h-5 flex items-center justify-center text-white absolute text-xs -right-2 -top-2">
+										{cart?.products?.length}
 									</span>
 								</div>
 							</div>
@@ -243,97 +183,6 @@ export const Header: React.FC = () => {
 						<div className="mt-10">
 							<div className="font-bold text-primary border-b border-primary/30 pb-2  px-6">
 								صفحات اصلی سایت
-							</div>
-							<div className="flex flex-col gap-3 text-sm mt-3">
-								{routs.map((item) => {
-									if (item?.href == "/standards") {
-										return (
-											<div className="" key={item.href}>
-												<button
-													onClick={() => setAccordionOpen(!accordionOpen)}
-													className={`flex justify-between w-full text-neutral-content text-sm `}
-												>
-													<span className="relative right-6">{item?.title}</span>
-
-													<span
-														className={`left-6 relative duration-100 ${
-															accordionOpen ? "rotate-0" : "rotate-90"
-														}`}
-													>
-														<IconArrow fill="black" strokeWidth={0} className="" />
-													</span>
-												</button>
-												<div
-													className={`grid overflow-hidden transition-all duration-300 ease-in-out  text-sm ${
-														accordionOpen
-															? "grid-rows-[1fr] opacity-100"
-															: "grid-rows-[0fr] opacity-0"
-													}`}
-												>
-													<div
-														className={`overflow-hidden flex flex-col gap-3 bg-neutral-content-focus px-8 duration-100 ${
-															accordionOpen ? "py-3 mt-2" : "mt-0"
-														}`}
-													>
-														<div className="relative ">
-															<Link
-																className={`  transition ${
-																	pathname.includes("standards/persian")
-																		? "text-primary"
-																		: "text-neutral-content"
-																}`}
-																href="/standards/persian"
-															>
-																مراجع و استاندارد فارسی
-															</Link>
-														</div>
-														<div className="relative ">
-															<Link
-																className={`  transition ${
-																	pathname.includes("standards/english")
-																		? "text-primary"
-																		: "text-neutral-content"
-																}`}
-																href="/standards/english"
-															>
-																مراجع و استاندارد انگلیسی
-															</Link>
-														</div>
-														<div className="relative ">
-															<Link
-																className={`  transition ${
-																	pathname.includes("standards/programs")
-																		? "text-primary"
-																		: "text-neutral-content"
-																}`}
-																href="/standards/programs"
-															>
-																نرم افزارهای محاسبات استاندارد
-															</Link>
-														</div>
-													</div>
-												</div>
-											</div>
-										);
-									} else {
-										return (
-											<div key={item.href} className="relative  px-6">
-												<Link
-													className={`transition ${
-														item.href !== "/" && pathname.includes(item.href)
-															? "text-primary font-semibold"
-															: item.href == "/" && pathname == item.href
-															? "text-primary  font-semibold"
-															: "text-neutral-content"
-													}`}
-													href={item.href !== "/standards" ? item?.href : "#"}
-												>
-													{item.title}
-												</Link>
-											</div>
-										);
-									}
-								})}
 							</div>
 						</div>
 						<div className="mt-10 px-6">

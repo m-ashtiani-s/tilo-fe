@@ -26,7 +26,7 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({
   notification: { id, message, type, duration = 5000 },
 }) => {
   const dismissNotification = useNotificationStore(
-    (state:any) => state.dismissNotification
+    (state) => state.dismissNotification
   );
   const [progessValue, setProgressValue] = useState<number>(100);
   useEffect(() => {
