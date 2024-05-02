@@ -15,78 +15,48 @@ import { RegisterAction, verify } from "@/actions/auth";
 import { AnyARecord } from "dns";
 import { Login } from "./loginForn.types";
 import { loginSchema } from "../_types/login.schema";
-import { signOut,signIn } from "next-auth/react";
+import { signOut, signIn } from "next-auth/react";
+import {} from "@/auth";
 
 const RegisterForm = () => {
-	const [formValues, setFormValues] = useState<ContactFormtype>({});
-
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-		const { name, value } = event.target;
-		setFormValues((prevFormValues: ContactFormtype) => ({
-			...prevFormValues,
-			[name]: value,
-		}));
-	};
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		getValues,
 	} = useForm<Login>({
 		resolver: zodResolver(loginSchema),
 	});
-
-	const [formState, action] = useFormState(verify, null);
-	const [isPending, startTransition] = useTransition();
 
 	const router = useRouter();
 
 	const showNotification = useNotificationStore((state) => state.showNotification);
 
-	useEffect(() => {
-		// if (formState && !formState.success) {
-		// 	showNotification({
-		// 		message: formState?.message,
-		// 		type: "error",
-		// 	});
-		// } else if (formState && formState.success) {
-		// 	showNotification({
-		// 		message: "you signed up successfully.",
-		// 		type: "info",
-		// 	});
-		// 	setTimeout(() => {
-		// 		router.push(`/`);
-		// 	}, 1000);
-		// }
-		console.log(formState)
-	}, [formState, showNotification, router, getValues]);
-
-	const onSubmit = (data: Login) => {
-		const formData = new FormData();
-		formData.append("personData", data.personData);
-		formData.append("password", data.password);
-
+	const onSubmit = async (data: Login) => {
 		const user = {
+			redirect: false,
 			personData: data.personData,
 			password: data.password,
 		};
-		startTransition(async () => {
-			await action(formData);
-		});
-		// login(user)
+		const res = await signIn("credentials", user);
+		if (!!res?.error) {
+			showNotification({
+				message: "Login failed",
+				type: "error",
+			});
+		} else {
+			showNotification({
+				message: 'Login successfull',
+				type: "success",
+			});
+			setTimeout(() => {
+				router.push('/')
+			}, 1000);
+		}
 	};
 
 	async function myFunction() {
 		await signOut();
 	}
-	// async function login(user:any) {
-	// 	try{
-	// 		await signIn('credentials',user);
-	// 	}catch(err){
-	// 		console.log('popo',err)
-	// 	}
-	// }
 
 	return (
 		<div className="w-9/12">

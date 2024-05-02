@@ -7,5 +7,5 @@ export const authConfig={
         
     },
     providers:[],
-    secret: 'gfdgregwfg',
+    secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig
