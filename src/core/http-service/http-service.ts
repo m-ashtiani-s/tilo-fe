@@ -86,10 +86,11 @@ async function updateData<TModel, TResult>(url: string, data: TModel, headers?: 
 	return await apiBase<TResult>(url, options);
 }
 
-async function deleteData(url: string, headers?: AxiosRequestHeaders): Promise<void> {
+async function deleteData< TResult>(url: string, headers?: AxiosRequestConfig["headers"]): Promise<TResult> {
+	const token=!url.includes('login') ? await getToken() : ''
 	const options: AxiosRequestConfig = {
 		method: "DELETE",
-		headers: headers,
+		headers: { ...headers, token: token },
 	};
 
 	return await apiBase(url, options);
