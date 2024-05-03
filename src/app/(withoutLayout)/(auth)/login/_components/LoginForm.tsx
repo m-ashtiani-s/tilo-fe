@@ -59,8 +59,8 @@ const RegisterForm = () => {
 			</div>
 			<div className="mt-4">
 				<form className="flex flex-col gap-6 mt-16" onSubmit={handleSubmit(onSubmit)}>
-					<TextInput<Login> register={register} name={"personData"} errors={errors} placeholder="userName" />
-					<TextInput<Login> register={register} name={"password"} errors={errors} placeholder="password" />
+					<TextInput<Login> register={register} name={"personData"} errors={errors} placeholder="userName" className=" border-b border-b-neutral-3" />
+					<TextInput<Login> register={register} name={"password"} errors={errors} placeholder="password" className=" border-b border-b-neutral-3" />
 
 					<Button type="submit">Sign Up</Button>
 					<Link className="text-secondary-green text-center font-semibold" href="/">

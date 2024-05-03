@@ -76,10 +76,10 @@ const RegisterForm = () => {
 			</div>
 			<div className="mt-4">
 				<form className="flex flex-col gap-6 mt-16" onSubmit={handleSubmit(onSubmit)}>
-					<TextInput<Register> register={register} name={"name"} errors={errors} placeholder="name" />
-					<TextInput<Register> register={register} name={"userName"} errors={errors} placeholder="userName" />
-					<TextInput<Register> register={register} name={"email"} errors={errors} placeholder="email" />
-					<TextInput<Register> register={register} name={"password"} errors={errors} placeholder="password" />
+					<TextInput<Register> register={register} name={"name"} errors={errors} placeholder="name" className=" border-b border-b-neutral-3" />
+					<TextInput<Register> register={register} name={"userName"} errors={errors} placeholder="userName" className=" border-b border-b-neutral-3" />
+					<TextInput<Register> register={register} name={"email"} errors={errors} placeholder="email" className=" border-b border-b-neutral-3" />
+					<TextInput<Register> register={register} name={"password"} errors={errors} placeholder="password" className=" border-b border-b-neutral-3" />
 
 					<Button loadingText="Signing up..." isLoading={loading} disabled={loading} type="submit">
 						Sign Up

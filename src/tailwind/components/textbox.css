@@ -1,6 +1,6 @@
 .textbox {
     @apply h-12 px-4 text-sm leading-loose flex-shrink placeholder-base-content placeholder-opacity-50 text-primary;
-    @apply border-b border-b-neutral-3  bg-transparent text-base;
+    @apply  bg-transparent text-base;
     &:focus {
         @apply outline outline-0 outline-offset-2 ;
     }

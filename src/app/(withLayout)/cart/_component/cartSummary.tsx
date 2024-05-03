@@ -6,6 +6,7 @@ import Image from "next/image";
 import ProductSingle from "./productSingle";
 import { useEffect, useState } from "react";
 import { Button } from "@/app/_components/button/button";
+import Link from "next/link";
 
 export default function CartSummary() {
 	const { cart }: { cart: Cart | null } = useCartStore();
@@ -92,7 +93,7 @@ export default function CartSummary() {
                 <div className="font-semibold text-lg">Total</div>
                 <div className=" font-semibold text-lg">${total}</div>
             </div>
-            <Button className="mt-6">Checkout</Button>
+            <Link href={`checkout?shipping=${cartMehod}`} className="btn duration-150 mt-6">Checkout</Link>
 		</div>
 	);
 }
