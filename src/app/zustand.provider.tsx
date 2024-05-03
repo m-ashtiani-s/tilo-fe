@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { API_URL } from "@/configs/global";
 import { readData } from "@/core/http-service/http-service";
@@ -8,39 +8,39 @@ import { useSessionStore } from "@/stores/session";
 import { Cart } from "@/types/cart";
 import { Res } from "@/types/responseType";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
+function ZustandProvider({ children }: { children: any }) {
+	const showNotification = useNotificationStore((state) => state.showNotification);
+	const { data: session } = useSession();
+	const sessionRead = useRef(false);
 
-function ZustandProvider({children}: {children:any}) {
-    const showNotification = useNotificationStore((state) => state.showNotification);
-    const { data: session } = useSession();
-   
-    useEffect(()=>{
-        getCart()
-    },[])
-    useEffect(()=>{
-        useSessionStore.setState({session})
-    },[session])
+	useEffect(() => {
+		!!sessionRead.current && getCart();
+	}, [sessionRead.current]);
+	useEffect(() => {
+		useSessionStore.setState({ session });
+		if (!!session) {
+			sessionRead.current = true;
+		}
+	}, [session]);
 
-    const getCart = async () => {
-        try {
-            const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
+	const getCart = async () => {
+		try {
+			const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
 
-            !!res.success && useCartStore.setState({ cart:res?.data });
-        } catch (error:any) {
-            error?.code !==401 && showNotification({
-				message: error?.message || 'get cart items failed',
-				type: "error",
-			});
-        } finally {
-        }
-    };
-    
-    return (
-        <>
-        {children}
-        </>
-    )
+			!!res.success && useCartStore.setState({ cart: res?.data });
+		} catch (error: any) {
+			error?.code !== 401 &&
+				showNotification({
+					message: error?.message || "get cart items failed",
+					type: "error",
+				});
+		} finally {
+		}
+	};
+
+	return <>{children}</>;
 }
 
 export default ZustandProvider;

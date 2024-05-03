@@ -43,6 +43,7 @@ async function getToken() {
 
 async function apiBase<T>(url: string, options?: AxiosRequestConfig): Promise<T> {
 	const response: AxiosResponse = await httpService(url, options);
+	
 	return response.data as T;
 }
 
@@ -55,8 +56,11 @@ async function readData<T>(url: string, headers?: AxiosRequestConfig["headers"])
 	try {
 		const response = await apiBase<T>(url, options);
 		return response;
-	} catch (error) {
+	} catch (error:any) {
 		console.log(error);
+		if (error?.code === 401){
+			console.log('khar')
+		}
 		throw error;
 	}
 }

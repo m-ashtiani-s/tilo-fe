@@ -1,4 +1,5 @@
 import ProductsInCart from "./_component/ProductsInCart";
+import CartSummary from "./_component/cartSummary";
 
 
 
@@ -28,7 +29,7 @@ export default function Page() {
                     </div>
 				</div>
 			</section>
-			<section className="">
+			<section className="pb-40">
 				<div className="container">
 					<div className="flex gap-16">
                         <div className="w-8/12">
@@ -42,7 +43,7 @@ export default function Page() {
                             </div>
                             <ProductsInCart />
                         </div>
-                        <div className="w-4/12"></div>
+                        <div className="w-4/12"><CartSummary /></div>
                     </div>
 				</div>
 			</section>
