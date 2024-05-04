@@ -53,11 +53,13 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 					return error;
 				}
 			},
+			
 		}),
 	],
 
 	session: {
-		maxAge: 60 * 60 * 48,
+		maxAge: 60*60*2 ,
+		
 	},
 	secret: process.env.AUTH_SECRET,
 	callbacks: {
@@ -83,6 +85,8 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 				accessToken: token.accessToken,
 			};
 			Object.assign(session.user, userData ?? {});
+			// session.user=userData as any
+			// session.expires=new Date("2024-04-04T10:52:28.478Z") as any
 			return session;
 		},
 	},

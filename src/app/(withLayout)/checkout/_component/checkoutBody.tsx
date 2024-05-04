@@ -8,11 +8,23 @@ import { useForm } from "react-hook-form";
 import { checkoutSchema } from "../_types/ckeckout.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkout } from "../_types/checkout.type";
+import { useCartStore } from "@/stores/cart.store";
+import { Cart } from "@/types/cart";
+import { createData, readData } from "@/core/http-service/http-service";
+import { Res } from "@/types/responseType";
+import { API_URL } from "@/configs/global";
+import { useNotificationStore } from "@/stores/notification.store";
+import { useRouter } from "next/navigation";
 
+type createOrder = Checkout & {
+	cartId?: string;
+};
 
 export default function CheckoutBody() {
+    const router=useRouter()
+	const showNotification = useNotificationStore((state) => state.showNotification);
 	const [cartMehod, setCartMethod] = useState<string>("credit");
-
+	const { cart }: { cart: Cart | null } = useCartStore();
 	const changeval = (e: any) => {
 		setCartMethod(e.target.value);
 	};
@@ -25,8 +37,9 @@ export default function CheckoutBody() {
 	});
 
 	const onSubmit = (data: Checkout) => {
-        console.log(data)
+		console.log(data);
 		const ckeckoutForm = {
+			cartId: cart?._id,
 			firstName: data.firstName || "",
 			lastName: data.lastName || "",
 			phoneNumber: data.phoneNumber || "",
@@ -41,7 +54,42 @@ export default function CheckoutBody() {
 			expirationDate: data.expirationDate || "",
 			cvc: data.cvc || "",
 		};
-		console.log(ckeckoutForm);
+		!!cart?._id && createOrder(ckeckoutForm)
+	};
+
+	const getCart = async () => {
+		try {
+			const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
+
+			!!res.success && useCartStore.setState({ cart: res?.data });
+		} catch (error: any) {
+			error?.code !== 401 &&
+				showNotification({
+					message: error?.message || "get cart items failed",
+					type: "error",
+				});
+		} finally {
+		}
+	};
+
+	const createOrder = async (data: createOrder) => {
+		try {
+			const res = await createData<createOrder, Res<string>>(`${API_URL}/v1/order`, data);
+			if (!!res?.success) {
+				getCart();
+                showNotification({
+                    message: res?.message,
+                    type: "success",
+                });
+                !!res?.data && router.push(`order/${res?.data}`)
+			}
+		} catch (error: any) {
+			showNotification({
+				message: error?.message || "add to cart failed",
+				type: "error",
+			});
+		} finally {
+		}
 	};
 
 	return (

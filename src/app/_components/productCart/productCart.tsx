@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { Res } from "@/types/responseType";
 import { Product } from "@/types/product";
 import { useNotificationStore } from "@/stores/notification.store";
+import { useCartStore } from "@/stores/cart.store";
+import { Cart } from "@/types/cart";
 
 interface Iprops {
 	product: Product;
@@ -22,7 +24,6 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 	const [liked, setLiked] = useState<boolean>(false);
 
 	useEffect(() => {
-		console.log(likedProducts);
 		likedProducts?.map((liked) => {
 			liked?._id === product._id && setLiked(true);
 		});
@@ -50,16 +51,32 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 				productId: productId,
 				quantity: quantity,
 			});
+			
+			!!res.success && getCart();
 			showNotification({
 				message: res?.message,
 				type: "success",
 			});
-			!!res.success && setLiked(!liked);
 		} catch (error: any) {
 			showNotification({
 				message: error?.message || "add to cart failed",
 				type: "error",
 			});
+		} finally {
+		}
+	};
+
+	const getCart = async () => {
+		try {
+			const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
+
+			!!res.success && useCartStore.setState({ cart: res?.data });
+		} catch (error: any) {
+			error?.code !== 401 &&
+				showNotification({
+					message: error?.message || "get cart items failed",
+					type: "error",
+				});
 		} finally {
 		}
 	};

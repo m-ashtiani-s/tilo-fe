@@ -9,8 +9,9 @@ import { serverActionWrapper } from "./server-action-wrapper";
 // import { SendAuthCode } from "@/app/(auth)/verify/_types/verify-user.type";
 import { Problem } from "@/types/http-errors.interface";
 import { Register } from "@/app/(withoutLayout)/(auth)/register/_components/registerForn.types";
-import { signIn } from "@/auth";
+// import { signIn } from "@/auth";
 import { API_URL } from "@/configs/global";
+import { signIn } from "next-auth/react";
 
 export async function RegisterAction(formState: any | null, formData: FormData) {
 	const name = formData.get("name") as string;

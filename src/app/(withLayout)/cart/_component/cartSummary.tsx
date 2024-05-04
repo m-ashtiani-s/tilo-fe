@@ -25,7 +25,7 @@ export default function CartSummary() {
 		} else {
 			!!cart && setTotal(cart?.cartSumWithDiscount);
 		}
-	}, [cartMehod]);
+	}, [cartMehod,cart]);
 
 	return (
 		<div className="flex flex-col rounded-lg border border-1 border-neutral-6 p-6">

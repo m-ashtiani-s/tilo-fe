@@ -47,10 +47,11 @@ async function apiBase<T>(url: string, options?: AxiosRequestConfig): Promise<T>
 	return response.data as T;
 }
 
-async function readData<T>(url: string, headers?: AxiosRequestConfig["headers"]): Promise<T> {
+async function readData<T>(url: string,params?:any, headers?: AxiosRequestConfig["headers"]): Promise<T> {
     const token=await getToken()
 	const options: AxiosRequestConfig = {
 		headers: { ...headers, token: token },
+		params:params,
 		method: "GET",
 	};
 	try {
