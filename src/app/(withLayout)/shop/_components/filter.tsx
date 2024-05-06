@@ -19,25 +19,34 @@ type Catrgory = {
 	name: string;
 };
 
-export default function Filter({ getProducts }: { getProducts: any }) {
+interface IProps {
+	getProducts: any;
+	pageSize: number;
+	setPage: React.Dispatch<React.SetStateAction<number>>;
+	setCategorySelected: React.Dispatch<React.SetStateAction<string>>;
+	setPriceValues: React.Dispatch<React.SetStateAction<PriceRange>>;
+	categorySelected:string
+}
+
+export default function Filter({ getProducts, pageSize, setPage,categorySelected, setCategorySelected, setPriceValues }: IProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const [categorySelected, setCategorySelected] = useState<string>("");
+	// const [categorySelected, setCategorySelected] = useState<string>("");
 	const [changeTrace, setChangeTrace] = useState<string>("");
 	const [categories, setCategories] = useState<Catrgory[]>([]);
 	const [values, setValues] = useState<PriceRange>({ min: 0, max: 500 });
 
-	useEffect(()=>{
-		const categoryUrl = searchParams.get('category')
-		const minPriceUrl = searchParams.get('minPrice')
-		const maxPriceUrl = searchParams.get('maxPrice')
+	useEffect(() => {
+		const categoryUrl = searchParams.get("category");
+		const minPriceUrl = searchParams.get("minPrice");
+		const maxPriceUrl = searchParams.get("maxPrice");
 
-		!!minPriceUrl && setValues((prev:PriceRange)=>({...prev,min:parseInt(minPriceUrl)}))
-		!!maxPriceUrl && setValues((prev:PriceRange)=>({...prev,max:parseInt(maxPriceUrl)}))
-		!!categoryUrl && setCategorySelected(categoryUrl)
-	},[])
+		!!minPriceUrl && setValues((prev: PriceRange) => ({ ...prev, min: parseInt(minPriceUrl) }));
+		!!maxPriceUrl && setValues((prev: PriceRange) => ({ ...prev, max: parseInt(maxPriceUrl) }));
+		!!categoryUrl && setCategorySelected(categoryUrl);
+	}, []);
 
 	const createQueryString = useCallback(
 		(name: string, value: string) => {
@@ -49,40 +58,32 @@ export default function Filter({ getProducts }: { getProducts: any }) {
 		[searchParams]
 	);
 
-
 	const changeCategory = (id: string) => {
 		if (id == categorySelected) {
-			getProducts("");
 			setCategorySelected("");
 			router.push(pathname + "?" + createQueryString("category", ""), { scroll: false });
 		} else {
-			getProducts(id);
 			setCategorySelected(id);
 			router.push(pathname + "?" + createQueryString("category", id), { scroll: false });
 		}
 	};
 
-	
-
 	const handleChange = (value: any) => {
-		if(value?.max===values.max){
-			setChangeTrace('min')
-		}else{
-			setChangeTrace('max')
+		if (value?.max === values.max) {
+			setChangeTrace("min");
+		} else {
+			setChangeTrace("max");
 		}
 		setValues(value);
 	};
 	const handlePriceFilter = (value: any) => {
-		console.log(value,values)
-		if(changeTrace==="min"){
+		if (changeTrace === "min") {
 			router.push(pathname + "?" + createQueryString("minPrice", value?.min?.toString()), { scroll: false });
-		}else{
+		} else {
 			router.push(pathname + "?" + createQueryString("maxPrice", value?.max?.toString()), { scroll: false });
 		}
-		
-		
-		getProducts(categorySelected, value?.min, value?.max);
-		
+
+		setPriceValues({min:value?.min,max:value?.max})
 	};
 
 	useEffect(() => {
@@ -98,8 +99,6 @@ export default function Filter({ getProducts }: { getProducts: any }) {
 		} finally {
 		}
 	};
-
-
 
 	return (
 		<div className="text-neutral-7 ">
@@ -137,7 +136,6 @@ export default function Filter({ getProducts }: { getProducts: any }) {
 						value={values}
 						onChange={handleChange}
 						onChangeComplete={handlePriceFilter}
-						
 					/>
 				</div>
 				<div className="mt-6 text-sm">

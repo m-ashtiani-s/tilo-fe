@@ -14,7 +14,7 @@ import { useCartStore } from "@/stores/cart.store";
 import { Cart } from "@/types/cart";
 
 interface Iprops {
-	product: Product;
+	product: Product | null;
 	likedProducts: Product[] | null;
 	loggedIn: boolean;
 }
@@ -24,14 +24,17 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 	const [liked, setLiked] = useState<boolean>(false);
 
 	useEffect(() => {
+		setLiked(false);
+	}, [product]);
+	useEffect(() => {
 		likedProducts?.map((liked) => {
-			liked?._id === product._id && setLiked(true);
+			liked?._id === product?._id && setLiked(true);
 		});
-	}, [likedProducts]);
+	}, [likedProducts, product]);
 
 	const likeProductHandler = async () => {
 		try {
-			const res = await createData<{ productId: string }, Res<Product>>(`${API_URL}/v1/like`, {
+			const res = await createData<{ productId?: string }, Res<Product>>(`${API_URL}/v1/like`, {
 				productId: product?._id,
 			});
 			!!res.success && setLiked(!liked);
@@ -51,7 +54,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 				productId: productId,
 				quantity: quantity,
 			});
-			
+
 			!!res.success && getCart();
 			showNotification({
 				message: res?.message,
@@ -119,7 +122,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					<div className="text-neutral-7 font-semibold mt-1">{product?.title}</div>
 					<div className="flex gap-4 mt-1">
 						<div className="text-neutral-7">${product?.priceWithDiscount}</div>
-						{!!product.discount && (
+						{!!product?.discount && (
 							<div className="text-neutral-4 relative">
 								${product?.price}
 								<span className="w-full absolute h-0.25 bg-neutral-4 left-0 top-2.5 "></span>

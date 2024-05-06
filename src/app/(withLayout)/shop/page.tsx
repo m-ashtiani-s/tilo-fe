@@ -11,11 +11,25 @@ import { useEffect, useRef, useState } from "react";
 import { useSessionStore } from "@/stores/session";
 import { Session } from "@/types/session";
 import Filter from "./_components/filter";
+import { getPageNumbers, getPageNumbersB } from "@/utils/pageArray";
+import Pagination from "./_components/pagination";
+interface PriceRange {
+	min: number;
+	max: number;
+}
 
 export default function Page() {
 	const { session }: { session: Session | null } = useSessionStore();
-	const [products, setProducts] = useState<Product[]>([]);
+	const [products, setProducts] = useState<Paginate<Product> | null>(null);
 	const [likedProducts, setLikedProducts] = useState<Product[]>([]);
+	const [categorySelected, setCategorySelected] = useState<string>("");
+	const [values, setValues] = useState<PriceRange>({ min: 0, max: 500 });
+	const [page, setPage] = useState<number>(1);
+	const [pageSize, setPagesize] = useState<number>(1);
+	const prevValues = useRef(values);
+	const prevCategorySelected = useRef(categorySelected);
+	const prevPage = useRef(page);
+
 	const mount = useRef<boolean>(false);
 
 	useEffect(() => {
@@ -23,19 +37,36 @@ export default function Page() {
 	}, []);
 	useEffect(() => {
 		if (!!mount.current) {
-			getProducts();
+			getProducts(4, 1);
 			getLikedProducts();
 		}
 	}, [mount]);
+	useEffect(() => {
+		if (!!mount.current) {
+			if(prevCategorySelected.current!==categorySelected || prevValues.current!==values){
+				getProducts(pageSize, 1, categorySelected, values?.min, values?.max);
+				setPage(1)
 
-	const getProducts = async (id?: string, minPrice?: number, maxPrice?: number) => {
+			}else {
+				getProducts(pageSize, page, categorySelected, values?.min, values?.max);
+
+
+			}
+			prevValues.current = values;
+			prevCategorySelected.current = categorySelected;
+		}
+	}, [prevPage.current, pageSize, values, categorySelected]);
+
+	const getProducts = async (limit?: number, page?: number, id?: string, minPrice?: number, maxPrice?: number) => {
 		try {
 			const res = await readData<Res<Paginate<Product>>>(`${API_URL}/v1/products`, {
 				...(!!id ? { category: id } : null),
 				...(!!minPrice ? { minPrice: minPrice } : null),
 				...(!!maxPrice ? { maxPrice: maxPrice } : null),
+				limit: limit,
+				page: page,
 			});
-			!!res.data && setProducts(res.data?.elements);
+			!!res.data && setProducts(res?.data);
 		} catch (error) {
 			console.log("error: ", error);
 		} finally {
@@ -52,7 +83,7 @@ export default function Page() {
 		} finally {
 		}
 	};
-	console.log(session);
+
 	return (
 		<>
 			<section className="h-140">
@@ -78,20 +109,31 @@ export default function Page() {
 				<div className="container">
 					<div className="flex gap-6">
 						<div className="w-3/12">
-							<Filter getProducts={getProducts} />
+							<Filter
+								categorySelected={categorySelected}
+								setCategorySelected={setCategorySelected}
+								setPriceValues={setValues}
+								pageSize={pageSize}
+								getProducts={getProducts}
+								setPage={setPage}
+							/>
 						</div>
 						<div className="w-9/12">
 							<div className="flex flex-wrap">
-								{products?.map((product) => (
-									<div className="w-4/12 p-3">
-										<ProductCart
-											product={product}
-											likedProducts={likedProducts}
-											loggedIn={!!session}
-										/>
-									</div>
-								))}
+								{!!products &&
+									products?.elements?.map((product) => (
+										<div className="w-4/12 p-3">
+											<ProductCart
+												product={product}
+												likedProducts={likedProducts}
+												loggedIn={!!session}
+											/>
+										</div>
+									))}
 							</div>
+							{!!products && (
+								<Pagination prevPage={prevPage} page={page} setPage={setPage} totalPages={products?.totalPages} />
+							)}
 						</div>
 					</div>
 				</div>
