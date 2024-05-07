@@ -24,11 +24,18 @@ interface IProps {
 	pageSize: number;
 	setPage: React.Dispatch<React.SetStateAction<number>>;
 	setCategorySelected: React.Dispatch<React.SetStateAction<string>>;
-	setPriceValues: React.Dispatch<React.SetStateAction<PriceRange>>;
-	categorySelected:string
+	setPriceValues: React.Dispatch<React.SetStateAction<PriceRange | null>>;
+	categorySelected: string;
 }
 
-export default function Filter({ getProducts, pageSize, setPage,categorySelected, setCategorySelected, setPriceValues }: IProps) {
+export default function Filter({
+	getProducts,
+	pageSize,
+	setPage,
+	categorySelected,
+	setCategorySelected,
+	setPriceValues,
+}: IProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -37,6 +44,7 @@ export default function Filter({ getProducts, pageSize, setPage,categorySelected
 	const [changeTrace, setChangeTrace] = useState<string>("");
 	const [categories, setCategories] = useState<Catrgory[]>([]);
 	const [values, setValues] = useState<PriceRange>({ min: 0, max: 500 });
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		const categoryUrl = searchParams.get("category");
@@ -83,7 +91,7 @@ export default function Filter({ getProducts, pageSize, setPage,categorySelected
 			router.push(pathname + "?" + createQueryString("maxPrice", value?.max?.toString()), { scroll: false });
 		}
 
-		setPriceValues({min:value?.min,max:value?.max})
+		setPriceValues({ min: value?.min, max: value?.max });
 	};
 
 	useEffect(() => {
@@ -92,11 +100,13 @@ export default function Filter({ getProducts, pageSize, setPage,categorySelected
 
 	const getCategories = async () => {
 		try {
+			setLoading(true);
 			const res = await readData<Res<Catrgory[]>>(`${API_URL}/v1/categories`);
 			!!res.data && !!res?.success && setCategories(res?.data);
 		} catch (error) {
 			console.log("error: ", error);
 		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -109,19 +119,31 @@ export default function Filter({ getProducts, pageSize, setPage,categorySelected
 			<div className="mt-8">
 				<div className="mb-4 font-medium">CATEGORIES</div>
 				<div className="flex flex-col gap-3 items-start">
-					{categories?.map((category) => (
-						<div
-							className={`border-b-2 pb-0.5 text-sm cursor-pointer duration-200 ${
-								category?.id === categorySelected
-									? "text-neutral-7 border-neutral-7 font-medium"
-									: "text-neutral-4 border-neutral-7/0"
-							}`}
-							key={category?.id}
-							onClick={() => changeCategory(category?.id)}
-						>
-							{category?.name}
-						</div>
-					))}
+					{!!categories && !loading ? (
+						<>
+							{categories?.map((category) => (
+								<div
+									className={`border-b-2 pb-0.5 text-sm cursor-pointer duration-200 ${
+										category?.id === categorySelected
+											? "text-neutral-7 border-neutral-7 font-medium"
+											: "text-neutral-4 border-neutral-7/0"
+									}`}
+									key={category?.id}
+									onClick={() => changeCategory(category?.id)}
+								>
+									{category?.name}
+								</div>
+							))}
+						</>
+					) : loading ? (
+						<>
+							<div className="h-6 w-32 bg-gray-300 rounded  opacity-80 animate-pulse "></div>
+							<div className="h-6 w-32 bg-gray-300 rounded  opacity-80 animate-pulse "></div>
+							<div className="h-6 w-32 bg-gray-300 rounded  opacity-80 animate-pulse "></div>
+						</>
+					) : (
+						<>no cat</>
+					)}
 				</div>
 			</div>
 			<div className="h-0.25 bg-neutral-4/15 my-8"></div>

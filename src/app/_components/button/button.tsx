@@ -27,7 +27,7 @@ export const Button : React.FC<ButtonProps> = ({
         'btn duration-150',
         className,
         {"btn-outline":isOutline},
-        {"pointer-events-none opacity-60":isLoading},
+        {"pointer-events-none opacity-80":isLoading},
         {"btn-link":isLink}, 
         {"animated-icon":animatedIcon},
         {[`${shapeClasses[shape]}`]:shape},

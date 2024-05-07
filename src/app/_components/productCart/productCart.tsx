@@ -22,6 +22,7 @@ interface Iprops {
 export default function ProductCart({ product, likedProducts, loggedIn = false }: Iprops) {
 	const showNotification = useNotificationStore((state) => state.showNotification);
 	const [liked, setLiked] = useState<boolean>(false);
+	const [addToCartLoading,setAddToCartLoading]=useState<boolean>(false)
 
 	useEffect(() => {
 		setLiked(false);
@@ -50,6 +51,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 
 	const addToCart = async (productId: string, quantity: number) => {
 		try {
+			setAddToCartLoading(true)
 			const res = await createData<{ productId: string; quantity: number }, Res<null>>(`${API_URL}/v1/cart`, {
 				productId: productId,
 				quantity: quantity,
@@ -66,6 +68,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 				type: "error",
 			});
 		} finally {
+			setAddToCartLoading(false)
 		}
 	};
 
@@ -93,7 +96,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					</Link>
 
 					<div className="w-10/12 absolute left-[8.33333%] bottom-6">
-						<Button className="w-full" onClick={addTocartHandler}>
+						<Button isLoading={addToCartLoading} loadingText="Adding to cart" className="w-full" onClick={addTocartHandler}>
 							add to cart
 						</Button>
 					</div>

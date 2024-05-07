@@ -41,10 +41,23 @@ async function getToken() {
 	}
 }
 
-async function apiBase<T>(url: string, options?: AxiosRequestConfig): Promise<T> {
-	const response: AxiosResponse = await httpService(url, options);
+// async function apiBase<T>(url: string, options?: AxiosRequestConfig): Promise<T> {
+// 	const response: AxiosResponse = await httpService(url, options);
 	
-	return response.data as T;
+// 	return response.data as T;
+// }
+
+async function apiBase<T>(url: string, options?: AxiosRequestConfig): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+        setTimeout(async () => {
+            try {
+                const response: AxiosResponse = await httpService(url, options);
+                resolve(response.data as T);
+            } catch (error) {
+                reject(error);
+            }
+        }, 5000); // 5 seconds delay
+    });
 }
 
 async function readData<T>(url: string,params?:any, headers?: AxiosRequestConfig["headers"]): Promise<T> {
@@ -55,6 +68,7 @@ async function readData<T>(url: string,params?:any, headers?: AxiosRequestConfig
 		method: "GET",
 	};
 	try {
+		
 		const response = await apiBase<T>(url, options);
 		return response;
 	} catch (error:any) {

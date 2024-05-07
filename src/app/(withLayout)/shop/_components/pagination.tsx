@@ -7,7 +7,18 @@ type IProps={
 	prevPage:any
 }
 
+
+
 export default function Pagination({ page,totalPages,setPage,prevPage }: IProps) {
+
+	const handleScrollToTop = () => {
+		window.scrollTo({
+		  top: 560,
+		  behavior: 'smooth'
+		});
+	  };
+
+	  
 	return (
 		<div className="flex gap-4 justify-center pt-4 mb-10 border-t border-neutral-4/40 mt-6">
 			{
@@ -17,7 +28,7 @@ export default function Pagination({ page,totalPages,setPage,prevPage }: IProps)
 						className={`h-7 w-7 rounded-md border border-neutral-6 flex items-center justify-center cursor-pointer  duration-200 ${
 							item === page ? "bg-neutral-6 text-white" : "text-neutral-6 hover:bg-neutral-4/20"
 						}`}
-						onClick={() => {setPage(item);prevPage.current=item}}
+						onClick={() => {setPage(item);prevPage.current=item;handleScrollToTop()}}
 					>
 						{item}
 					</div>
@@ -28,7 +39,7 @@ export default function Pagination({ page,totalPages,setPage,prevPage }: IProps)
 						<>
 							<div
 								className={`h-7 w-7 rounded-md border border-neutral-6 flex items-center justify-center cursor-pointer  duration-200 ${"text-neutral-6 hover:bg-neutral-4/20"}`}
-								onClick={() => {setPage(1);prevPage.current=1}}
+								onClick={() => {setPage(1);prevPage.current=1;handleScrollToTop()}}
 							>
 								1
 							</div>
@@ -40,7 +51,7 @@ export default function Pagination({ page,totalPages,setPage,prevPage }: IProps)
 							className={`h-7 w-7 rounded-md border border-neutral-6 flex items-center justify-center cursor-pointer  duration-200 ${
 								item === page ? "bg-neutral-6 text-white" : "text-neutral-6 hover:bg-neutral-4/20"
 							}`}
-							onClick={() => {setPage(item);prevPage.current=item}}
+							onClick={() => {setPage(item);prevPage.current=item;handleScrollToTop()}}
 						>
 							{item}
 						</div>
@@ -50,7 +61,7 @@ export default function Pagination({ page,totalPages,setPage,prevPage }: IProps)
 							{page !== totalPages - 3 && "..."}
 							<div
 								className={`h-7 w-7 rounded-md border border-neutral-6 flex items-center justify-center cursor-pointer  duration-200 ${"text-neutral-6 hover:bg-neutral-4/20"}`}
-								onClick={() => {setPage(totalPages);prevPage.current=totalPages}}
+								onClick={() => {setPage(totalPages);prevPage.current=totalPages;handleScrollToTop()}}
 							>
 								{totalPages}
 							</div>

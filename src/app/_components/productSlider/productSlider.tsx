@@ -17,13 +17,15 @@ import { headers } from "next/headers";
 import { useNotificationStore } from "@/stores/notification.store";
 import { useSessionStore } from "@/stores/session";
 import { Session } from "@/types/session";
+import CartLoading from "../productCart/loadings/cartLoading";
 
 export default function ProductSlider() {
 	const { session }: { session: Session | null } = useSessionStore();
-	const [width, setWidth] = useState<number>(0); 
+	const [width, setWidth] = useState<number>(0);
 	const [lastTenProducts, setLastTenProducts] = useState<Product[]>([]);
 	const [likedProducts, setLikedProducts] = useState<Product[]>([]);
 	const showNotification = useNotificationStore((state) => state.showNotification);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -47,24 +49,25 @@ export default function ProductSlider() {
 
 	async function fetchProducts() {
 		try {
+			setLoading(true);
 			const res = await readData<Res<Paginate<Product>>>(`${API_URL}/v1/products`);
 			!!res.data && setLastTenProducts(res.data?.elements);
-		} catch (err:any) {
-			console.log(err)
-            showNotification({
-				message: err?.message || 'loading product failed',
+		} catch (err: any) {
+			console.log(err);
+			showNotification({
+				message: err?.message || "loading product failed",
 				type: "error",
 			});
+		} finally {
+			setLoading(false);
 		}
 	}
 	async function fetchLikedProducts() {
 		try {
 			const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`);
 			!!res.data && setLikedProducts(res?.data);
-			console.log(res)
-		} catch (err:any) {
-			
-        }
+			console.log(res);
+		} catch (err: any) {}
 	}
 	return (
 		<Swiper
@@ -77,11 +80,20 @@ export default function ProductSlider() {
 			slidesPerView={4}
 			className="mySwiper custom-swipper"
 		>
-			{lastTenProducts?.map((slide, index: number) => (
-				<SwiperSlide key={index}>
-					<ProductCart product={slide} likedProducts={likedProducts} loggedIn={!!session} />
-				</SwiperSlide>
-			))}
+			{loading ? (
+				<div className="flex"><CartLoading width="w-3/12" />
+				<CartLoading width="w-3/12" />
+				<CartLoading width="w-3/12" />
+				<CartLoading width="w-3/12" /></div>
+			) : (
+				<>
+					{lastTenProducts?.map((slide, index: number) => (
+						<SwiperSlide key={index}>
+							<ProductCart product={slide} likedProducts={likedProducts} loggedIn={!!session} />
+						</SwiperSlide>
+					))}
+				</>
+			)}
 		</Swiper>
 	);
 }
