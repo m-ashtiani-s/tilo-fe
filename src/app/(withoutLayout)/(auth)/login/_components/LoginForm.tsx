@@ -11,8 +11,10 @@ import { Login } from "./loginForn.types";
 import { loginSchema } from "../_types/login.schema";
 import { signIn } from "next-auth/react";
 import {} from "@/auth";
+import { useState } from "react";
 
 const RegisterForm = () => {
+	const [loading,setLoading]=useState<boolean>(false)
 	const {
 		register,
 		handleSubmit,
@@ -31,21 +33,25 @@ const RegisterForm = () => {
 			personData: data.personData,
 			password: data.password,
 		};
-		const res = await signIn("credentials", user);
-		if (!!res?.error) {
-			showNotification({
-				message: "Login failed",
-				type: "error",
-			});
-		} else {
+		try {
+			setLoading(true);
+			const res = await signIn("credentials", user);
 			showNotification({
 				message: "Login successfull",
 				type: "success",
 			});
+			setLoading(false);
 			setTimeout(() => {
 				router.push("/");
 			}, 1000);
+		} catch (error) {
+			showNotification({
+				message: "Login failed",
+				type: "error",
+			});
+			setLoading(false);
 		}
+		
 	};
 
 	return (
@@ -59,10 +65,22 @@ const RegisterForm = () => {
 			</div>
 			<div className="mt-4">
 				<form className="flex flex-col gap-6 mt-16" onSubmit={handleSubmit(onSubmit)}>
-					<TextInput<Login> register={register} name={"personData"} errors={errors} placeholder="userName" className=" border-b border-b-neutral-3" />
-					<TextInput<Login> register={register} name={"password"} errors={errors} placeholder="password" className=" border-b border-b-neutral-3" />
+					<TextInput<Login>
+						register={register}
+						name={"personData"}
+						errors={errors}
+						placeholder="userName"
+						className=" border-b border-b-neutral-3"
+					/>
+					<TextInput<Login>
+						register={register}
+						name={"password"}
+						errors={errors}
+						placeholder="password"
+						className=" border-b border-b-neutral-3"
+					/>
 
-					<Button type="submit">Sign Up</Button>
+					<Button isLoading={loading} loadingText="Signing in ..." type="submit">Sign In</Button>
 					<Link className="text-secondary-green text-center font-semibold" href="/">
 						Home Page
 					</Link>
