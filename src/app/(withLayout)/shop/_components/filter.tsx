@@ -51,9 +51,21 @@ export default function Filter({
 		const minPriceUrl = searchParams.get("minPrice");
 		const maxPriceUrl = searchParams.get("maxPrice");
 
-		!!minPriceUrl && setValues((prev: PriceRange) => ({ ...prev, min: parseInt(minPriceUrl) }));
-		!!maxPriceUrl && setValues((prev: PriceRange) => ({ ...prev, max: parseInt(maxPriceUrl) }));
-		!!categoryUrl && setCategorySelected(categoryUrl);
+		if (minPriceUrl) {
+            const minPrice = parseInt(minPriceUrl);
+            setValues((prev) => ({ ...prev, min: minPrice }));
+            setPriceValues((prev) => (prev ? { ...prev, min: minPrice } : { min: minPrice, max: values.max }));
+        }
+
+        if (maxPriceUrl) {
+            const maxPrice = parseInt(maxPriceUrl);
+            setValues((prev) => ({ ...prev, max: maxPrice }));
+            setPriceValues((prev) => (prev ? { ...prev, max: maxPrice } : { min: values.min, max: maxPrice }));
+        }
+
+        if (categoryUrl) {
+            setCategorySelected(categoryUrl);
+        }
 	}, []);
 
 	const createQueryString = useCallback(
@@ -104,7 +116,6 @@ export default function Filter({
 			const res = await readData<Res<Catrgory[]>>(`${API_URL}/v1/categories`);
 			!!res.data && !!res?.success && setCategories(res?.data);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
 			setLoading(false);
 		}

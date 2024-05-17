@@ -12,6 +12,32 @@ import { Res } from "@/types/responseType";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProductLoading from "./_components/loading";
+import { motion } from "framer-motion";
+
+const boxMotions = {
+	initial: { opacity: 0 },
+};
+
+const transitionProps = {
+	duration: 0.2,
+	scale: {
+		type: "spring",
+		damping: 50,
+		stiffness: 400,
+	},
+};
+
+const hide = {
+	opacity: 0,
+	transitionEnd: {
+		display: "none",
+	},
+};
+
+const show = {
+	opacity: 1,
+	display: "block",
+};
 
 export default function Page({ params }: { params: { id: string } }) {
 	const { id } = params;
@@ -42,13 +68,12 @@ export default function Page({ params }: { params: { id: string } }) {
 
 	const getProduct = async (id: string) => {
 		try {
-            setLoading(true)
+			setLoading(true);
 			const res = await readData<Res<Product>>(`${API_URL}/v1/products/${id}`);
 			!!res.data && setProduct(res?.data);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
-            setLoading(false)
+			setLoading(false);
 		}
 	};
 	const likeProductHandler = async () => {
@@ -58,7 +83,6 @@ export default function Page({ params }: { params: { id: string } }) {
 			});
 			!!res.success && setLiked(!liked);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
 		}
 	};
@@ -95,7 +119,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
 			!!res.data && setLikedProducts(res.data);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
 		}
 	};
@@ -114,10 +137,14 @@ export default function Page({ params }: { params: { id: string } }) {
 					</div>
 				</div>
 			</section>
-			{loading ? (
-				<ProductLoading />
-			) : (
-				<section className="">
+			{!!product && !loading ? (
+				<motion.section
+					variants={boxMotions}
+					initial="initial"
+					animate={show}
+					transition={transitionProps}
+					className=""
+				>
 					<div className="container">
 						<div className="flex gap-16 py-16">
 							<div className="w-4/12">
@@ -209,7 +236,16 @@ export default function Page({ params }: { params: { id: string } }) {
 							</div>
 						</div>
 					</div>
-				</section>
+				</motion.section>
+			) : loading ? (
+				<ProductLoading />
+			) : (
+				<div className="border border-dashed border-1 border-neutral-4/50 p-8 py-12 w-6/12 mx-auto rounded-lg my-24">
+					<div className="flex gap-4 items-center justify-center h-full">
+						<img src="/images/search.svg" alt="" className="w-12 opacity-60" />
+						No Product Found!
+					</div>
+				</div>
 			)}
 		</>
 	);

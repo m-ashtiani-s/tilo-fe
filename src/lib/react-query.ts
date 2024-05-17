@@ -6,7 +6,6 @@ import {MutationCache, QueryCache, QueryClient} from "@tanstack/react-query"
 export const queryClient = new QueryClient({
     queryCache: new QueryCache({
         onError: (error) => {
-            console.log('gggg',error)
             // show notification
         },
     }),
@@ -14,7 +13,6 @@ export const queryClient = new QueryClient({
     mutationCache: new MutationCache({
         onError: (error) => {
             // show notification
-            console.log(error)
         },
     }),
 

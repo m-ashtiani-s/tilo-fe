@@ -44,7 +44,6 @@ export async function RegisterAction(formState: any | null, formData: FormData) 
 //     formState: any | null,
 //     mobile: string
 // ) {
-//     console.log('fff')
 //     return serverActionWrapper(
 //         async () =>
 //             await createData<SendAuthCode, string>("/send-auth-code", {
@@ -59,7 +58,6 @@ export async function verify(state: any, formData: FormData) {
 	try {
 		const res = await signIn("credentials", { personData, password });
 	}catch (error:any) {
-        console.log('qq',error?.message)
         if(!!error?.success){
             return {
                 success: true,
@@ -78,5 +76,4 @@ export async function verify(state: any, formData: FormData) {
 }
 
 // export async function logout() {
-//     console.log('ff')
 // }

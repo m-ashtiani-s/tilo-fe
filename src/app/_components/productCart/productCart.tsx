@@ -12,6 +12,8 @@ import { Product } from "@/types/product";
 import { useNotificationStore } from "@/stores/notification.store";
 import { useCartStore } from "@/stores/cart.store";
 import { Cart } from "@/types/cart";
+import { Loading } from "../loading/loading";
+import { motion } from "framer-motion";
 
 interface Iprops {
 	product: Product | null;
@@ -19,10 +21,30 @@ interface Iprops {
 	loggedIn: boolean;
 }
 
+const boxMotions = {
+	initial: { opacity: 0 },
+};
+
+const transitionProps = {
+	duration: 0.2,
+	scale: {
+		type: "spring",
+		damping: 50,
+		stiffness: 400,
+	},
+};
+
+
+const show = {
+	opacity: 1,
+	display: "block",
+};
+
 export default function ProductCart({ product, likedProducts, loggedIn = false }: Iprops) {
 	const showNotification = useNotificationStore((state) => state.showNotification);
 	const [liked, setLiked] = useState<boolean>(false);
-	const [addToCartLoading,setAddToCartLoading]=useState<boolean>(false)
+	const [addToCartLoading, setAddToCartLoading] = useState<boolean>(false);
+	const [likeLoading, setLikeLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		setLiked(false);
@@ -35,13 +57,14 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 
 	const likeProductHandler = async () => {
 		try {
+			setLikeLoading(true);
 			const res = await createData<{ productId?: string }, Res<Product>>(`${API_URL}/v1/like`, {
 				productId: product?._id,
 			});
 			!!res.success && setLiked(!liked);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
+			setLikeLoading(false);
 		}
 	};
 
@@ -51,7 +74,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 
 	const addToCart = async (productId: string, quantity: number) => {
 		try {
-			setAddToCartLoading(true)
+			setAddToCartLoading(true);
 			const res = await createData<{ productId: string; quantity: number }, Res<null>>(`${API_URL}/v1/cart`, {
 				productId: productId,
 				quantity: quantity,
@@ -68,7 +91,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 				type: "error",
 			});
 		} finally {
-			setAddToCartLoading(false)
+			setAddToCartLoading(false);
 		}
 	};
 
@@ -88,7 +111,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 	};
 
 	return (
-		<div>
+		<motion.div variants={boxMotions} initial="initial" animate={show} transition={transitionProps}>
 			<div className="flex flex-col ">
 				<div className="relative">
 					<Link href={`/shop/${product?._id}`}>
@@ -96,7 +119,12 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					</Link>
 
 					<div className="w-10/12 absolute left-[8.33333%] bottom-6">
-						<Button isLoading={addToCartLoading} loadingText="Adding to cart" className="w-full" onClick={addTocartHandler}>
+						<Button
+							isLoading={addToCartLoading}
+							loadingText="Adding to cart"
+							className="w-full"
+							onClick={addTocartHandler}
+						>
 							add to cart
 						</Button>
 					</div>
@@ -110,13 +138,17 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					)}
 					{!!loggedIn && (
 						<span className="absolute h-8 w-8 flex items-center justify-center rounded-full shadow-md bg-white top-4 right-4">
-							<IconLike
-								onClick={likeProductHandler}
-								strokeWidth={3}
-								className={` hover:fill-red-500 duration-200 cursor-pointer  hover:stroke-neutral-4/0 ${
-									liked ? "fill-red-500 stroke-neutral-4/0" : "fill-red-500/0 stroke-neutral-4"
-								}`}
-							/>
+							{likeLoading ? (
+								<Loading />
+							) : (
+								<IconLike
+									onClick={likeProductHandler}
+									strokeWidth={3}
+									className={` hover:stroke-red-500 duration-200 cursor-pointer ${
+										liked ? "fill-red-500 stroke-neutral-4/0" : "fill-red-500/0 stroke-neutral-4"
+									}`}
+								/>
+							)}
 						</span>
 					)}
 				</div>
@@ -134,6 +166,6 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					</div>
 				</Link>
 			</div>
-		</div>
+		</motion.div>
 	);
 }

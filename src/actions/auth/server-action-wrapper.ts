@@ -10,7 +10,6 @@ export async function serverActionWrapper<T>(
     } catch (error: unknown) {
         const err = error as Problem;
         if (err) {
-            console.log(err)
             return {
                 isSuccess: false,
                 error: err,

@@ -16,7 +16,6 @@ const CartMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<bo
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			console.log("ghgh");
 			if (addressRef.current && !addressRef?.current?.contains(event.target as Node)) {
 				setOpen(false);
 			}
@@ -51,7 +50,7 @@ const CartMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<bo
 							)}
 							<div className=" text-neutral-6">${cart?.cartSumWithDiscount}</div>
 						</div>
-						<Link href={`cart`} className="btn duration-150">
+						<Link onClick={()=>setOpen(false)} href={`/cart`} className="btn duration-150">
 							Cart
 						</Link>
 					</div>

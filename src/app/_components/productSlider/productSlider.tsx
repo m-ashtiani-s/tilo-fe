@@ -53,7 +53,6 @@ export default function ProductSlider() {
 			const res = await readData<Res<Paginate<Product>>>(`${API_URL}/v1/products`);
 			!!res.data && setLastTenProducts(res.data?.elements);
 		} catch (err: any) {
-			console.log(err);
 			showNotification({
 				message: err?.message || "loading product failed",
 				type: "error",
@@ -66,7 +65,6 @@ export default function ProductSlider() {
 		try {
 			const res = await readData<Res<Product[]>>(`${API_URL}/v1/liked-products`);
 			!!res.data && setLikedProducts(res?.data);
-			console.log(res);
 		} catch (err: any) {}
 	}
 	return (

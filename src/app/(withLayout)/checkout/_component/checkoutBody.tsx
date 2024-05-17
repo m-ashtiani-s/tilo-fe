@@ -37,7 +37,6 @@ export default function CheckoutBody() {
 	});
 
 	const onSubmit = (data: Checkout) => {
-		console.log(data);
 		const ckeckoutForm = {
 			cartId: cart?._id,
 			firstName: data.firstName || "",

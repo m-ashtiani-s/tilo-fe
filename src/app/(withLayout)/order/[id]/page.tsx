@@ -13,7 +13,6 @@ async function getToken() {
 	}
 }
 async function getCourseDetails(slug: string) {
-	console.log("gghhgghh", await getToken());
 	const res = await fetch(`${API_URL}/v1/order/${slug}`, {
 		headers: {
 			token: (await getToken()) || "",

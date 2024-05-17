@@ -6,13 +6,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { IconArrow, IconArrowRight, IconBasket, IconClose, IconLike, IconLogout } from "../../icon/icons";
 import { signOut } from "next-auth/react";
+import { userInSession } from "@/types/session";
 
-const UserMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const UserMenu = ({ setOpen,user }: { setOpen: React.Dispatch<React.SetStateAction<boolean>>,user:userInSession }) => {
 	const addressRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			console.log("ghgh");
 			if (addressRef.current && !addressRef?.current?.contains(event.target as Node)) {
 				setOpen(false);
 			}
@@ -30,7 +30,7 @@ const UserMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<bo
 			<div className="flex items-center gap-8 bg-none flex-col-reverse h-8"></div>
 			<div className="flex flex-col bg-neutral-2 shadow  rounded">
 				<Link href="/" className="flex justify-between py-6 px-4 border-b border-b-neutral-4/25 w-full">
-					<div className="text-neutral-6">Mohammad</div>
+					<div className="text-neutral-6">{user?.name}</div>
 					<IconArrow strokeWidth={0} fill="black" className="-rotate-90" />
 				</Link>
 				<div className="flex-col flex">

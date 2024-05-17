@@ -11,36 +11,43 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 
 function ZustandProvider({ children }: { children: any }) {
-	const showNotification = useNotificationStore((state) => state.showNotification);
-	const { data: session } = useSession();
-	const sessionRead = useRef(false);
+    const showNotification = useNotificationStore((state) => state.showNotification);
+    const { data: session } = useSession();
+    const sessionRead = useRef(false);
+    const setLoading = useCartStore((state) => state.setLoading);
+    const loading = useCartStore((state) => state.loading);
 
-	useEffect(() => {
-		!!sessionRead.current && getCart();
-	}, [sessionRead.current]);
-	useEffect(() => {
-		useSessionStore.setState({ session });
-		if (!!session) {
-			sessionRead.current = true;
-		}
-	}, [session]);
+    useEffect(() => {
+        !!sessionRead.current && getCart();
+    }, [sessionRead.current]);
+    useEffect(() => {
+        useSessionStore.setState({ session });
+        if (!!session) {
+            sessionRead.current = true;
+        }
+    }, [session]);
 
-	const getCart = async () => {
-		try {
-			const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
+    const getCart = async () => {
+        try {
+            setLoading(true);
+            const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
 
-			!!res.success && useCartStore.setState({ cart: res?.data });
-		} catch (error: any) {
-			error?.code !== 401 &&
-				showNotification({
-					message: error?.message || "get cart items failed",
-					type: "error",
-				});
-		} finally {
-		}
-	};
+            if (res.success) {
+                useCartStore.setState({ cart: res?.data });
+            }
+        } catch (error: any) {
+            if (error?.code !== 401) {
+                showNotification({
+                    message: error?.message || "get cart items failed",
+                    type: "error",
+                });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
-	return <>{children}</>;
+    return <>{children}</>;
 }
 
 export default ZustandProvider;

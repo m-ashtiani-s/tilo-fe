@@ -52,8 +52,6 @@ export default function HeroSlider() {
 			modules={[Autoplay,Navigation, Pagination]}
 			slidesPerView={1}
 			className="mySwiper custom-swipper hero-slider"
-			// onSlideChange={() => console.log("slide change")}
-			// onSwiper={(swiper) => console.log(swiper)}
 		>
 			{slides?.map((slide, index: number) => (
 				<SwiperSlide key={slide?.image + index}>

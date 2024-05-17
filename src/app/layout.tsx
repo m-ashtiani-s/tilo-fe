@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						/>
 						<Notifications />
 						<QueryProvider>
-							<div className="">{children}</div>
+							<div className="text- text-neutral-6">{children}</div>
 						</QueryProvider>
 					</ZustandProvider>
 				</SessionProvider>

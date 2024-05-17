@@ -102,14 +102,12 @@ const Upload = () => {
       // Update list of all files
       fetchAllFiles();
 
-      console.log('File uploaded successfully');
     } catch (error:any) {
       setError('Error uploading file: ' + error?.message);
     }
   };
 
   const handleShowFiles = () => {
-    console.log('List of uploaded files:', uploadedFiles);
   };
 
   const handleDeleteFile = async (file:any) => {
@@ -130,7 +128,6 @@ const Upload = () => {
       // Update list of all files
       fetchAllFiles();
 
-      console.log('File deleted successfully');
     } catch (error) {
       console.error('Error deleting file: ', error);
     }

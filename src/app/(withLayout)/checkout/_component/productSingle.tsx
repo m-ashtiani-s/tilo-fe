@@ -35,7 +35,6 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 
 	const increamentHandler = () => {
 		setQuantity((prev) => prev + 1);
-		console.log(quantity);
 	};
 	const decreamentHandler = () => {
 		quantity > 1 && setQuantity((prev) => prev - 1);

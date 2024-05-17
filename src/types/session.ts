@@ -14,4 +14,5 @@ export type userInSession = {
 	role: string;
 	iat: number;
 	exp: number;
+	name:string;
 };

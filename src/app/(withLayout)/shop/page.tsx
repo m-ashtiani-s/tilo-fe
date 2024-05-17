@@ -44,31 +44,58 @@ export default function Page() {
 		}
 	}, [mount]);
 	useEffect(() => {
-		if (!!mount.current) {
-			if (prevCategorySelected.current !== categorySelected || prevValues.current !== values) {
-				getProducts(pageSize, 1, categorySelected, values?.min, values?.max);
-				setPage(1);
-			} else {
-				getProducts(pageSize, page, categorySelected, values?.min, values?.max);
-			}
-			prevValues.current = values;
-			prevCategorySelected.current = categorySelected;
-		}
-	}, [prevPage.current, pageSize, values, categorySelected]);
+		const controller = new AbortController();
+		const signal = controller.signal;
 
-	const getProducts = async (limit?: number, page?: number, id?: string, minPrice?: number, maxPrice?: number) => {
+		const fetchData = async () => {
+			if (!!mount.current) {
+				try {
+					if (prevCategorySelected.current !== categorySelected || prevValues.current !== values) {
+						await getProducts(pageSize, 1, categorySelected, values?.min, values?.max, signal);
+						setPage(1);
+					} else {
+						await getProducts(pageSize, page, categorySelected, values?.min, values?.max, signal);
+					}
+					prevValues.current = values;
+					prevCategorySelected.current = categorySelected;
+				} catch (error: any) {
+					if (error?.name !== "AbortError") {
+						console.error("Failed to fetch products:", error);
+					}
+				}
+			}
+		};
+
+		fetchData();
+		return () => {
+			controller.abort();
+		};
+	}, [pageSize, values, categorySelected, page]);
+
+	const getProducts = async (
+		limit?: number,
+		page?: number,
+		id?: string,
+		minPrice?: number,
+		maxPrice?: number,
+		signal?: any
+	) => {
 		try {
 			setLoading(true);
-			const res = await readData<Res<Paginate<Product>>>(`${API_URL}/v1/products`, {
-				...(!!id ? { category: id } : null),
-				...(!!minPrice ? { minPrice: minPrice } : null),
-				...(!!maxPrice ? { maxPrice: maxPrice } : null),
-				limit: limit,
-				page: page,
-			});
-			!!res.data && setProducts(res?.data);
+			const res = await readData<Res<Paginate<Product>>>(
+				`${API_URL}/v1/products`,
+				{
+					...(id ? { category: id } : {}),
+					...(minPrice ? { minPrice: minPrice } : {}),
+					...(maxPrice ? { maxPrice: maxPrice } : {}),
+					limit: limit,
+					page: page,
+				},
+				{},
+				signal
+			);
+			!!res.data && setProducts(res.data);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
 			setLoading(false);
 		}
@@ -80,7 +107,6 @@ export default function Page() {
 
 			!!res.data && setLikedProducts(res.data);
 		} catch (error) {
-			console.log("error: ", error);
 		} finally {
 		}
 	};
@@ -122,15 +148,24 @@ export default function Page() {
 						<div className="w-9/12">
 							<div className="flex flex-wrap">
 								{!!products && !loading ? (
-									products?.elements?.map((product) => (
-										<div className="w-4/12 p-3">
-											<ProductCart
-												product={product}
-												likedProducts={likedProducts}
-												loggedIn={!!session}
-											/>
+									products?.totalElements > 0 ? (
+										products?.elements?.map((product) => (
+											<div className="w-4/12 p-3">
+												<ProductCart
+													product={product}
+													likedProducts={likedProducts}
+													loggedIn={!!session}
+												/>
+											</div>
+										))
+									) : (
+										<div className="border border-dashed border-1 border-neutral-4/50 p-8 py-12 w-10/12 mx-auto rounded-lg">
+											<div className="flex gap-4 items-center justify-center h-full">
+												<img src="/images/search.svg" alt="" className="w-12 opacity-60" />
+												No Product Found!
+											</div>
 										</div>
-									))
+									)
 								) : loading ? (
 									<>
 										<CartLoading />
@@ -142,7 +177,7 @@ export default function Page() {
 									<>no product</>
 								)}
 							</div>
-							{!!products && !loading ? (
+							{!!products && products?.totalElements > 0 && !loading ? (
 								<Pagination
 									prevPage={prevPage}
 									page={page}

@@ -24,12 +24,14 @@ import { useSessionStore } from "@/stores/session";
 import { Cart } from "@/types/cart";
 import { Session } from "@/types/session";
 import CartMenu from "./_components/cartMenu";
+import { Search } from "../search/search";
 
 export const Header: React.FC = () => {
 	const { cart }: { cart: Cart | null } = useCartStore();
 	const { session }: { session: Session | null } = useSessionStore();
 	const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
 	const [cartMenuOpen, setCartMenuOpen] = useState<boolean>(false);
+	const [searchOpen,setSearchOpen]=useState<boolean>(false)
 	const pathname = usePathname();
 
 	let [open, setOpen] = useState(false);
@@ -50,9 +52,9 @@ export const Header: React.FC = () => {
 		setOpen(false);
 	}, [pathname]);
 
-	console.log(session);
 	return (
 		<>
+		<Search open={searchOpen} setOpen={setSearchOpen}/>
 			<div className="h-10 bg-neutral-2 hidden lg:block">
 				<div className="container h-full">
 					<div className="flex justify-center h-full items-center gap-3">
@@ -106,7 +108,7 @@ export const Header: React.FC = () => {
 						<div className="w-2/12">
 							<div className="flex items-center gap-4 justify-end">
 								<div className="">
-									<IconSearch stroke="#28303F" strokeWidth={1.5} />
+									<IconSearch stroke="#28303F" strokeWidth={1.5} className="cursor-pointer" onClick={()=>setSearchOpen(true)} />
 								</div>
 								{!!session ? (
 									<div className="flex relative">
@@ -117,7 +119,7 @@ export const Header: React.FC = () => {
 											<IconUser stroke="#28303F" strokeWidth={1.5} />
 											<IconChevronDown strokeWidth={0} fill="#4f4f4f" width={18} />
 										</div>
-										{userMenuOpen && <UserMenu setOpen={setUserMenuOpen} />}
+										{userMenuOpen && <UserMenu user={session?.user?.user} setOpen={setUserMenuOpen} />}
 									</div>
 								) : (
 									<div className="flex relative">

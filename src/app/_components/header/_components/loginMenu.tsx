@@ -13,7 +13,6 @@ const UserLoginMenu = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateActi
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			console.log("ghgh");
 			if (addressRef.current && !addressRef?.current?.contains(event.target as Node)) {
 				setOpen(false);
 			}

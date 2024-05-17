@@ -137,3 +137,27 @@
 .hero-slider .swiper-pagination-clickable {
   bottom: 26px !important;
 }
+
+.search {
+	/* width */
+	::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: #f1f1f1;
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: #1b1b1b;
+		transition: 0.3s;
+		border-radius: 8px;
+	}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #555;
+	}
+}

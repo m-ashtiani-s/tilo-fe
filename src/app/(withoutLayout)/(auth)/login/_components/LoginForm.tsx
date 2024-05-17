@@ -36,19 +36,23 @@ const RegisterForm = () => {
 		try {
 			setLoading(true);
 			const res = await signIn("credentials", user);
-			showNotification({
+			!res?.error && showNotification({
 				message: "Login successfull",
 				type: "success",
 			});
-			setLoading(false);
-			setTimeout(() => {
-				router.push("/");
-			}, 1000);
-		} catch (error) {
-			showNotification({
+			console.log(res)
+			!!res?.error && showNotification({
 				message: "Login failed",
 				type: "error",
 			});
+			setLoading(false);
+			!res?.error && setTimeout(() => {
+				router.push("/");
+			}, 10000);
+		} catch (error) {
+			
+			setLoading(false);
+		}finally{
 			setLoading(false);
 		}
 		

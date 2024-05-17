@@ -6,17 +6,21 @@ import {devtools} from 'zustand/middleware';
 
 type CartState = {
     cart: Cart | null;
+    loading: boolean;
     showCart: (cartItem: Cart) => void;
+    setLoading: (loading: boolean) => void;
 };
 
-export const useCartStore = create<CartState>()(devtools((set, get) => ({
-    cart: null,
-    showCart: (cartItem:Cart) => {
-        set(state => ({
-            cart: cartItem
-        }));
-
-        
-    }
-})));
+export const useCartStore = create<CartState>()(
+    devtools((set) => ({
+        cart: null,
+        loading: true,
+        showCart: (cartItem: Cart) => {
+            set({ cart: cartItem });
+        },
+        setLoading: (loading: boolean) => {
+            set({ loading });
+        }
+    }))
+);
 
