@@ -45,6 +45,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 	const [liked, setLiked] = useState<boolean>(false);
 	const [addToCartLoading, setAddToCartLoading] = useState<boolean>(false);
 	const [likeLoading, setLikeLoading] = useState<boolean>(false);
+	const setLoading = useCartStore((state) => state.setLoading);
 
 	useEffect(() => {
 		setLiked(false);
@@ -74,6 +75,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 
 	const addToCart = async (productId: string, quantity: number) => {
 		try {
+			setLoading(true)
 			setAddToCartLoading(true);
 			const res = await createData<{ productId: string; quantity: number }, Res<null>>(`${API_URL}/v1/cart`, {
 				productId: productId,
@@ -90,6 +92,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 				message: error?.message || "add to cart failed",
 				type: "error",
 			});
+			setLoading(false)
 		} finally {
 			setAddToCartLoading(false);
 		}
@@ -97,6 +100,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 
 	const getCart = async () => {
 		try {
+			
 			const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
 
 			!!res.success && useCartStore.setState({ cart: res?.data });
@@ -107,6 +111,7 @@ export default function ProductCart({ product, likedProducts, loggedIn = false }
 					type: "error",
 				});
 		} finally {
+			setLoading(false)
 		}
 	};
 

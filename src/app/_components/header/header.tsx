@@ -25,6 +25,7 @@ import { Cart } from "@/types/cart";
 import { Session } from "@/types/session";
 import CartMenu from "./_components/cartMenu";
 import { Search } from "../search/search";
+import { Loading } from "../loading/loading";
 
 export const Header: React.FC = () => {
 	const { cart }: { cart: Cart | null } = useCartStore();
@@ -33,6 +34,9 @@ export const Header: React.FC = () => {
 	const [cartMenuOpen, setCartMenuOpen] = useState<boolean>(false);
 	const [searchOpen,setSearchOpen]=useState<boolean>(false)
 	const pathname = usePathname();
+	const loading = useCartStore((state) => state.loading);
+
+	console.log(loading)
 
 	let [open, setOpen] = useState(false);
 	const addressRef = useRef<HTMLDivElement>(null);
@@ -138,7 +142,7 @@ export const Header: React.FC = () => {
 										<>
 											<IconBasket stroke="#28303F" strokeWidth={1.5} onClick={() => setCartMenuOpen(true)} />
 											<span className="bg-neutral-7 rounded-full w-5 h-5 flex items-center justify-center text-white absolute text-xs -right-2 -top-2">
-												{cart?.products?.length || 0}
+												{loading ? <Loading /> : cart?.products?.length}
 											</span>
 											{cartMenuOpen && <CartMenu setOpen={setCartMenuOpen} />}
 										</>

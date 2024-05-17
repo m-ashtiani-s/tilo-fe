@@ -25,6 +25,7 @@ export default function CheckoutBody() {
 	const showNotification = useNotificationStore((state) => state.showNotification);
 	const [cartMehod, setCartMethod] = useState<string>("credit");
 	const { cart }: { cart: Cart | null } = useCartStore();
+	const setCartLoading = useCartStore((state) => state.setLoading);
 	const changeval = (e: any) => {
 		setCartMethod(e.target.value);
 	};
@@ -68,11 +69,13 @@ export default function CheckoutBody() {
 					type: "error",
 				});
 		} finally {
+			setCartLoading(false)
 		}
 	};
 
 	const createOrder = async (data: createOrder) => {
 		try {
+			setCartLoading(true)
 			const res = await createData<createOrder, Res<string>>(`${API_URL}/v1/order`, data);
 			if (!!res?.success) {
 				getCart();
@@ -87,6 +90,7 @@ export default function CheckoutBody() {
 				message: error?.message || "add to cart failed",
 				type: "error",
 			});
+			setCartLoading(false)
 		} finally {
 		}
 	};

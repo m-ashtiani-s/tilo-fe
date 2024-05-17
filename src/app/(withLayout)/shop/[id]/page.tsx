@@ -13,6 +13,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProductLoading from "./_components/loading";
 import { motion } from "framer-motion";
+import { useCartStore } from "@/stores/cart.store";
+import { Cart } from "@/types/cart";
 
 const boxMotions = {
 	initial: { opacity: 0 },
@@ -44,9 +46,11 @@ export default function Page({ params }: { params: { id: string } }) {
 	const [quantity, setQuantity] = useState<number>(1);
 	const showNotification = useNotificationStore((state) => state.showNotification);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [addToCartLoading, setAddToCartLoading] = useState<boolean>(false);
 	const [liked, setLiked] = useState<boolean>(false);
 	const [product, setProduct] = useState<Product>();
 	const [likedProducts, setLikedProducts] = useState<Product[]>([]);
+	const setCartLoading = useCartStore((state) => state.setLoading);
 
 	const ex = !!product?.discountExpire ? product?.discountExpire : "";
 	const expireDate = new Date(ex);
@@ -88,6 +92,8 @@ export default function Page({ params }: { params: { id: string } }) {
 	};
 	const addToCart = async (productId: string, quantity: number) => {
 		try {
+			setCartLoading(true)
+			setAddToCartLoading(true)
 			const res = await createData<
 				{
 					productId: string;
@@ -98,6 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
 				productId: productId,
 				quantity: quantity,
 			});
+			getCart()
 			showNotification({
 				message: res?.message,
 				type: "success",
@@ -108,8 +115,10 @@ export default function Page({ params }: { params: { id: string } }) {
 				message: error?.message || "add to cart failed",
 				type: "error",
 			});
+			setCartLoading(false)
 		} finally {
 			setQuantity(1);
+			setAddToCartLoading(false)
 		}
 	};
 
@@ -120,6 +129,22 @@ export default function Page({ params }: { params: { id: string } }) {
 			!!res.data && setLikedProducts(res.data);
 		} catch (error) {
 		} finally {
+		}
+	};
+
+	const getCart = async () => {
+		try {
+			const res = await readData<Res<Cart>>(`${API_URL}/v1/cart`);
+
+			!!res.success && useCartStore.setState({ cart: res?.data });
+		} catch (error: any) {
+			error?.code !== 401 &&
+				showNotification({
+					message: error?.message || "get cart items failed",
+					type: "error",
+				});
+		} finally {
+			setCartLoading(false)
 		}
 	};
 	return (
@@ -205,7 +230,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                 </div> */}
 									<div className="mt-8 flex gap-4">
 										<Quantity quantity={quantity} setQuantity={setQuantity} />
-										<Button className="w-full h-[52px]" onClick={addToCartHandler}>
+										<Button isLoading={addToCartLoading} loadingText="Adding to cart..." className="w-full h-[52px]" onClick={addToCartHandler}>
 											<div className="text-base">Add to Cart</div>
 										</Button>
 									</div>

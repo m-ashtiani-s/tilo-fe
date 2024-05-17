@@ -137,7 +137,10 @@
 .hero-slider .swiper-pagination-clickable {
   bottom: 26px !important;
 }
+body{
+	overflow-x: hidden;
 
+}
 .search {
 	/* width */
 	::-webkit-scrollbar {

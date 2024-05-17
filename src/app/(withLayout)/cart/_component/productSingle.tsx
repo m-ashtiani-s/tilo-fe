@@ -40,10 +40,7 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 			setLoading(true);
 			const res = await deleteData<Res<null>>(`${API_URL}/v1/cart/${cartId}/${product?._id}`);
 			if (!!res?.success) {
-				showNotification({
-					message: res?.message,
-					type: "success",
-				});
+				
 				getCart();
 			}
 		} catch (error: any) {
@@ -51,6 +48,9 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 				message: error?.message || "remove from cart failed",
 				type: "error",
 			});
+			setLoading(false)
+		}finally{
+			
 		}
 	};
 
@@ -88,6 +88,8 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 					type: "error",
 				});
 		} finally {
+			setLoading(false)
+			setQuantityLoading(false);
 		}
 	};
 
@@ -106,18 +108,15 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 			});
 			if (!!res?.success) {
 				getCart();
-				showNotification({
-					message: res?.message,
-					type: "success",
-				});
 			}
 		} catch (error: any) {
 			showNotification({
 				message: error?.message || "add to cart failed",
 				type: "error",
 			});
-		} finally {
 			setQuantityLoading(false);
+		} finally {
+			
 		}
 	};
 
@@ -132,7 +131,7 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 							className="text-neutral-5 text-sm flex items-center cursor-pointer"
 							onClick={RemoveFromCartHandler}
 						>
-							<IconClose className="relative top-1" />
+							{loading ? <Loading /> : <IconClose className="relative top-1" />}
 							Remove
 						</div>
 					</div>

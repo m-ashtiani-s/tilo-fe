@@ -14,8 +14,10 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 	const [loading, setLoading] = useState<boolean>(false);
 	const mount = useRef<boolean>(false);
 	const [quantity, setQuantity] = useState<number>(product?.quantity);
+	const setCartLoading = useCartStore((state) => state.setLoading);
 	const RemoveFromCartHandler = async () => {
 		try {
+			setCartLoading(true)
 			setLoading(true);
 			const res = await deleteData<Res<null>>(`${API_URL}/v1/cart/${cartId}/${product?._id}`);
 			if (!!res?.success) {
@@ -30,6 +32,7 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 				message: error?.message || "remove from cart failed",
 				type: "error",
 			});
+			setCartLoading(false)
 		}
 	};
 
@@ -61,11 +64,13 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 					type: "error",
 				});
 		} finally {
+			setCartLoading(false)
 		}
 	};
 
 	const addQuantity = async (productId: string, quantity: number) => {
 		try {
+			setCartLoading(true)
 			const res = await createData<
 				{
 					productId: string;
@@ -88,6 +93,7 @@ export default function ProductSingle({ product, cartId }: { product: productInC
 				message: error?.message || "add to cart failed",
 				type: "error",
 			});
+			setCartLoading(false)
 		} finally {
 		}
 	};

@@ -8,6 +8,7 @@ import { Notifications } from "./_components/notification/notification";
 import { SessionProvider } from "next-auth/react";
 import ZustandProvider from "./zustand.provider";
 import { API_URL } from "@/configs/global";
+import LoadingProvider from "./loadingProvider";
 
 const poppins = Poppins({
 	display: "swap",
@@ -39,7 +40,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						/>
 						<Notifications />
 						<QueryProvider>
+							<LoadingProvider>
+
 							<div className="text- text-neutral-6">{children}</div>
+							</LoadingProvider>
 						</QueryProvider>
 					</ZustandProvider>
 				</SessionProvider>
