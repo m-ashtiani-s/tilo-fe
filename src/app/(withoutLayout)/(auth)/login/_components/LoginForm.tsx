@@ -48,7 +48,7 @@ const RegisterForm = () => {
 			setLoading(false);
 			!res?.error && setTimeout(() => {
 				router.push("/");
-			}, 10000);
+			}, 1500);
 		} catch (error) {
 			
 			setLoading(false);

@@ -7,7 +7,7 @@ import { Paginate } from "@/types/paginate";
 import { Product } from "@/types/product";
 import { Res } from "@/types/responseType";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSessionStore } from "@/stores/session";
 import { Session } from "@/types/session";
 import Filter from "./_components/filter";
@@ -136,14 +136,16 @@ export default function Page() {
 				<div className="container">
 					<div className="flex gap-6">
 						<div className="w-3/12">
-							<Filter
-								categorySelected={categorySelected}
-								setCategorySelected={setCategorySelected}
-								setPriceValues={setValues}
-								pageSize={pageSize}
-								getProducts={getProducts}
-								setPage={setPage}
-							/>
+							<Suspense>
+								<Filter
+									categorySelected={categorySelected}
+									setCategorySelected={setCategorySelected}
+									setPriceValues={setValues}
+									pageSize={pageSize}
+									getProducts={getProducts}
+									setPage={setPage}
+								/>
+							</Suspense>
 						</div>
 						<div className="w-9/12">
 							<div className="flex flex-wrap">

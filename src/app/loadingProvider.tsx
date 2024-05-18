@@ -7,7 +7,7 @@ const boxMotions = {
 	initial: { opacity: 1 },
 };
 const boxMotions1 = {
-	initial: { scale: 0},
+	initial: { scale: 0 },
 };
 
 const transitionProps = {
@@ -39,12 +39,11 @@ function LoadingProvider({ children }: { children: any }) {
 
 	useEffect(() => {
 		const handleLoad = () => {
-			setTimeout(() => {
-				setLoading(false);
-			}, 3000);
+			setLoading(false);
+
 			setTimeout(() => {
 				setHiden(true);
-			}, 2800);
+			}, 200);
 		};
 
 		if (document.readyState === "complete") {

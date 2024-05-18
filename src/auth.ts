@@ -61,6 +61,7 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 		maxAge: 60*60*2 ,
 		
 	},
+	trustHost: true,
 	secret: process.env.AUTH_SECRET,
 	callbacks: {
 		async signIn({ user, account, profile, email, credentials }) {
